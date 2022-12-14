@@ -13,15 +13,14 @@ import mrtjp.relocation.{BlockMovingRow, MovingTileRegistry}
 import net.minecraft.client.gui.GuiScreen
 import org.apache.logging.log4j.LogManager
 
-@Mod(modid = RelocationMod.modID, useMetadata = true, modLanguage = "scala", guiFactory = "mrtjp.relocation.handler.GuiConfigFactory")
+@Mod(modid = RelocationMod.modID, useMetadata = true, modLanguage = "scala", guiFactory = "mrtjp.relocation.handler.GuiConfigFactory", acceptedMinecraftVersions = "[1.7.10]", dependencies = "required-after:MrTJPCoreMod", name = RelocationMod.modName, version = RelocationMod.version)
 object RelocationMod
 {
     RelocationAPI.instance = RelocationAPI_Impl
 
     final val modID = "ForgeRelocation"
     final val modName = "ForgeRelocation"
-    final val version = "@VERSION@"
-    final val buildnumber = "@BUILD_NUMBER@"
+    final val version = "GRADLETOKEN_VERSION"
 
     val log = LogManager.getFormatterLogger(modID)
 

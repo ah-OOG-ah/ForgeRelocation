@@ -21,14 +21,15 @@ import scala.collection.JavaConversions._
  * Add "Dfml.coreMods.load=mrtjp.relocation.asm.RelocationPlugin" to launch configs
  * to enable in a development workspace.
  */
-@IFMLLoadingPlugin.TransformerExclusions(value = Array("mrtjp.relocation.asm", "scala"))
+@IFMLLoadingPlugin.MCVersion("1.7.10")
+@IFMLLoadingPlugin.TransformerExclusions(value = Array("mrtjp.relocation.asm.*", "scala"))
 class RelocationPlugin extends IFMLLoadingPlugin with IFMLCallHook
 {
     override def getASMTransformerClass = Array("mrtjp.relocation.asm.Transformer")
     override def getSetupClass = "mrtjp.relocation.asm.RelocationPlugin"
     override def getModContainerClass = null
     override def getAccessTransformerClass = null
-    override def injectData(data:JMap[String, AnyRef]){}
+    override def injectData(data:JMap[String, AnyRef]): Unit ={}
     override def call():Void = null
 }
 

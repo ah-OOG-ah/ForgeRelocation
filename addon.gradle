@@ -1,0 +1,16 @@
+jar {
+    manifest {
+        attributes 'FMLCorePlugin': 'mrtjp.relocation.asm.RelocationPlugin'
+    }
+}
+
+import org.apache.tools.ant.filters.ReplaceTokens
+
+task updateAPIVersion(type: Copy) {
+    from(sourceSets.main.scala.srcDirs)
+    include '**/package-info.java'
+    into 'build/sources/scala'
+    filter(ReplaceTokens, tokens: ['GRADLETOKEN_VERSION': project.version])
+}
+
+compileScala.dependsOn updateAPIVersion

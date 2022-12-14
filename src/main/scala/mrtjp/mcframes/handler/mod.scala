@@ -12,15 +12,14 @@ import mrtjp.mcframes.api.MCFramesAPI
 import mrtjp.mcframes.{BlockFrame, BlockMotor, StickRegistry}
 import net.minecraft.client.gui.GuiScreen
 
-@Mod(modid = MCFramesMod.modID, useMetadata = true, modLanguage = "scala", guiFactory = "mrtjp.mcframes.handler.GuiConfigFactory")
+@Mod(modid = MCFramesMod.modID, useMetadata = true, modLanguage = "scala", guiFactory = "mrtjp.mcframes.handler.GuiConfigFactory", acceptedMinecraftVersions = "[1.7.10]", dependencies = "required-after:MrTJPCoreMod", name = MCFramesMod.modName, version = MCFramesMod.version)
 object MCFramesMod
 {
     MCFramesAPI.instance = MCFramesAPI_Impl
 
     final val modID = "MCFrames"
     final val modName = "MCFrames"
-    final val version = "@VERSION@"
-    final val buildnumber = "@BUILD_NUMBER@"
+    final val version = "GRADLETOKEN_VERSION"
 
     var blockFrame:BlockFrame = _
     var blockMotor:BlockMotor = _
