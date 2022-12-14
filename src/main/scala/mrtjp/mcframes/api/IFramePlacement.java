@@ -17,8 +17,7 @@ import net.minecraft.world.World;
  * placement. This class can be registered through the
  * {@link RelocationAPI}.
  */
-public interface IFramePlacement
-{
+public interface IFramePlacement {
     /**
      * Called sequentially on all registered IFrameBlockPlacements on
      * the frame item block's onItemUse function, until one returns true.
@@ -32,5 +31,6 @@ public interface IFramePlacement
      * @param hit The exact hit position of the click.
      * @return True if something happened. This will subsequently block the actual placement of the block.
      */
-    public boolean onItemUse(ItemStack item, EntityPlayer player, World world, int x, int y, int z, int side, Vector3 hit);
+    public boolean onItemUse(
+            ItemStack item, EntityPlayer player, World world, int x, int y, int z, int side, Vector3 hit);
 }

@@ -14,8 +14,7 @@ import net.minecraft.world.World;
  * <br><br>
  * It is recommended that mods access this class within a soft dependency class.
  */
-public abstract class RelocationAPI
-{
+public abstract class RelocationAPI {
     /**
      * This field will contain an implementor of this API if Relocation is installed.
      */

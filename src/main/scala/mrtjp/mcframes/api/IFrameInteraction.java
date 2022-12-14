@@ -14,8 +14,7 @@ import net.minecraft.world.World;
  * implement the IFrame interface. This class must be registered in
  * the {@link RelocationAPI}.
  */
-public interface IFrameInteraction extends IFrame
-{
+public interface IFrameInteraction extends IFrame {
     /**
      * Check to see if this interaction can be executed at the given
      * coordinates.

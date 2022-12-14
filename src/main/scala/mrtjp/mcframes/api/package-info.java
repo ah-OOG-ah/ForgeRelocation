@@ -4,7 +4,5 @@
  * All rights reserved.
  */
 
-//@API(owner = "MCFrames", provides = "MCFrames|API", apiVersion = "GRADLETOKEN_VERSION")
+// @API(owner = "MCFrames", provides = "MCFrames|API", apiVersion = "GRADLETOKEN_VERSION")
 package mrtjp.mcframes.api;
-
-import cpw.mods.fml.common.API;

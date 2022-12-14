@@ -14,8 +14,7 @@ import net.minecraft.world.World;
  * moving structure when moved through the {@link Relocator}. No other action besides
  * implementation of this interface is needed for the block to function.
  */
-public interface IFrame
-{
+public interface IFrame {
     /**
      * Used to check if this frame block is allowed to grab
      * a block on the given side.

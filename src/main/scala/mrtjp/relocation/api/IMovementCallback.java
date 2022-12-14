@@ -19,8 +19,7 @@ package mrtjp.relocation.api;
  * can only happen server-side.
  *
  */
-public interface IMovementCallback
-{
+public interface IMovementCallback {
     /**
      * Called once move starts.  The descriptor contains methods that
      * describe the state of the current movement that this callback

@@ -12,8 +12,7 @@ package mrtjp.relocation.api;
  * Results of all methods is only valid during movement, undefined otherwise.  Use
  * isMoving() to check before using any values from this.
  */
-public interface IMovementDescriptor
-{
+public interface IMovementDescriptor {
     /**
      * @return True if the structure is moving.
      */

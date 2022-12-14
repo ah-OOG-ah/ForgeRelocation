@@ -5,16 +5,14 @@
  */
 package mrtjp.mcframes.api;
 
+import java.util.Set;
 import mrtjp.relocation.api.BlockPos;
 import net.minecraft.world.World;
-
-import java.util.Set;
 
 /**
  * Helper class used to resolve frame structures.
  */
-public abstract class StickResolver
-{
+public abstract class StickResolver {
     /**
      * Method used to obtain the block coordinates of every block that is part of the same
      * framed structure as the one that was given as an argument.

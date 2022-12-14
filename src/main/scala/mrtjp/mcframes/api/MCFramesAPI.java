@@ -14,8 +14,7 @@ import net.minecraft.util.Vec3;
  * <br><br>
  * It is recommended that mods access this class within a soft dependency class.
  */
-public abstract class MCFramesAPI
-{
+public abstract class MCFramesAPI {
     /**
      * This field will contain an implementor of this API if Relocation is installed.
      */

@@ -5,16 +5,14 @@
  */
 package mrtjp.relocation.api;
 
-import net.minecraft.world.World;
-
 import java.util.Set;
+import net.minecraft.world.World;
 
 /**
  * Helper class used to queue and execute the movement of a set of blocks.
  * See {@link mrtjp.mcframes.TileMotor} for usage.
  */
-public abstract class Relocator
-{
+public abstract class Relocator {
     /**
      * Pushes an instance of the Relocator onto the stack.
      * Must be called before using any methods.
@@ -76,7 +74,9 @@ public abstract class Relocator
      * @throws IllegalStateException If the Relocator is not on the stack.
      */
     public abstract void addBlock(int x, int y, int z);
+
     public abstract void addBlock(BlockPos bc);
+
     public abstract void addBlocks(Set<BlockPos> blocks);
 
     /**

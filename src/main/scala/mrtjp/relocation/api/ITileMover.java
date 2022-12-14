@@ -11,8 +11,7 @@ import net.minecraft.world.World;
  * Interface for an object that manages the movement of blocks and tiles that are
  * registered to it. This class should be registered through the {@link RelocationAPI}.
  */
-public interface ITileMover
-{
+public interface ITileMover {
     /**
      * Used to check if the block at the given position can move. This
      * method is only called if the specified block is tied to this
