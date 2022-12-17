@@ -1,0 +1,3 @@
+dependencies {
+    compile 'com.github.GTNewHorizons:MrTJPCore:1.1.1:dev'
+}

@@ -1,0 +1,39 @@
+{
+	"modListVersion": 2,
+	"modList": [{
+		"modid": "${modId}",
+		"name": "${modName}",
+		"description": "Move blocks from one place to another",
+		"version": "${modVersion}",
+		"mcversion": "${minecraftVersion}",
+		"url": "",
+		"updateUrl": "",
+		"authorList": ["MrTJP"],
+		"credits": "",
+		"logoFile": "",
+		"screenshots": [],
+		"parent": "",
+		"requiredMods": ["MrTJPCoreMod"],
+		"dependencies": [],
+		"dependants": [],
+		"useDependencyInformation": true
+	},
+  {
+		"modid": "MCFrames",
+		"name": "MCFrames",
+		"description": "",
+		"version": "${modVersion}",
+		"mcversion": "${minecraftVersion}",
+		"url": "",
+		"updateUrl": "",
+		"authorList": ["MrTJP"],
+		"credits": "",
+		"logoFile": "fr_logo.png",
+		"screenshots": [],
+		"parent": "",
+		"requiredMods": ["${modId}"],
+		"dependencies": [],
+		"dependants": [],
+		"useDependencyInformation": true
+	}]
+}
