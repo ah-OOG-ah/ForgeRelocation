@@ -1,15 +1,14 @@
 /*
- * Copyright (c) 2015.
- * Created by MrTJP.
- * All rights reserved.
+ * Copyright (c) 2015. Created by MrTJP. All rights reserved.
  */
 package mrtjp.relocation.api;
 
 /**
- * Lightweight block position object used to keep dependencies confined
- * to the api package, used by some of the API's methods.
+ * Lightweight block position object used to keep dependencies confined to the api package, used by some of the API's
+ * methods.
  */
 public class BlockPos {
+
     public int x;
     public int y;
     public int z;

@@ -17,47 +17,47 @@ import net.minecraft.init.Items
 import net.minecraft.item.ItemStack
 import net.minecraftforge.oredict.ShapedOreRecipe
 
-class MCFramesProxy_server
-{
-    def preinit()
-    {
-        blockMotor = new BlockMotor
-        blockFrame = new BlockFrame
-    }
+class MCFramesProxy_server {
+  def preinit() {
+    blockMotor = new BlockMotor
+    blockFrame = new BlockFrame
+  }
 
-    def init()
-    {
-        MCFramesRecipes.initRecipes()
-    }
+  def init() {
+    MCFramesRecipes.initRecipes()
+  }
 
-    def postinit(){}
+  def postinit() {}
 }
 
-class MCFramesProxy_client extends MCFramesProxy_server
-{
-    @SideOnly(Side.CLIENT)
-    override def preinit()
-    {
-        super.preinit()
+class MCFramesProxy_client extends MCFramesProxy_server {
+  @SideOnly(Side.CLIENT)
+  override def preinit() {
+    super.preinit()
 
-        TileRenderRegistry.setRenderer(MCFramesMod.blockMotor, 0, RenderMotor)
+    TileRenderRegistry.setRenderer(MCFramesMod.blockMotor, 0, RenderMotor)
 
-        RenderFrame.renderID = RenderingRegistry.getNextAvailableRenderId
-        RenderingRegistry.registerBlockHandler(RenderFrame)
-    }
+    RenderFrame.renderID = RenderingRegistry.getNextAvailableRenderId
+    RenderingRegistry.registerBlockHandler(RenderFrame)
+  }
 }
 
 object MCFramesProxy extends MCFramesProxy_client
 
-object MCFramesRecipes
-{
-    def initRecipes()
-    {
-        //Frame
-        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockFrame, 8),
-            "sls","lsl","sls",
-            's':JC, Items.stick,
-            'l':JC, "logWood"
-        ))
-    }
+object MCFramesRecipes {
+  def initRecipes() {
+    // Frame
+    GameRegistry.addRecipe(
+      new ShapedOreRecipe(
+        new ItemStack(blockFrame, 8),
+        "sls",
+        "lsl",
+        "sls",
+        's': JC,
+        Items.stick,
+        'l': JC,
+        "logWood"
+      )
+    )
+  }
 }

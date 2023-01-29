@@ -1,18 +1,17 @@
 /*
- * Copyright (c) 2015.
- * Created by MrTJP.
- * All rights reserved.
+ * Copyright (c) 2015. Created by MrTJP. All rights reserved.
  */
 package mrtjp.relocation.api;
 
 /**
- * This is the interface of the object that is given to an {@link IMovementCallback} so
- * it may access movement information whenever it needs to during the movement.
+ * This is the interface of the object that is given to an {@link IMovementCallback} so it may access movement
+ * information whenever it needs to during the movement.
  *
- * Results of all methods is only valid during movement, undefined otherwise.  Use
- * isMoving() to check before using any values from this.
+ * Results of all methods is only valid during movement, undefined otherwise. Use isMoving() to check before using any
+ * values from this.
  */
 public interface IMovementDescriptor {
+
     /**
      * @return True if the structure is moving.
      */
