@@ -1,3 +1,6 @@
 dependencies {
-    compile 'com.github.GTNewHorizons:MrTJPCore:1.1.1:dev'
+
+    //api("com.google:guava:17.0")
+
+    api("com.github.GTNewHorizons:MrTJPCore:compat:dev")
 }
