@@ -38,8 +38,8 @@ public class TileMovingRow extends InstancedBlockTile {
 
     @Override
     public void update() {
-        if (!MovementManager2.isMoving(world, x, y, z)) {
-            world.setBlockToAir(x, y, z);
+        if (!MovementManager2.isMoving(world(), x, y, z)) {
+            world().setBlockToAir(x, y, z);
         }
     }
 
@@ -50,10 +50,10 @@ public class TileMovingRow extends InstancedBlockTile {
 
     @Override
     public Cuboid6 getBlockBounds() {
-        BlockStruct s = MovementManager2.getEnclosedStructure(world, x, y, z);
+        BlockStruct s = MovementManager2.getEnclosedStructure(world(), x, y, z);
         if (s != null) {
             BlockRow r = s.rows.stream().filter(u -> u.contains(x, y, z)).findFirst().get();
-            return TileMovingRow.getBoxFor(world, r, s.progress);
+            return TileMovingRow.getBoxFor(world(), r, s.progress);
         } else return Cuboid6.full;
     }
 
@@ -71,7 +71,7 @@ public class TileMovingRow extends InstancedBlockTile {
 
         double dp = ((progress >= 1.0) ? progress + 0.1 : progress) - prevProg;
         Vector3 d = new Vector3(BlockCoord.sideOffsets[r.moveDir]).multiply(dp);
-        List<Entity> entities = world.getEntitiesWithinAABBExcludingEntity(null, box);
+        List<Entity> entities = world().getEntitiesWithinAABBExcludingEntity(null, box);
         if (entities != null) {
             for (Entity e : entities) {
                 e.moveEntity(d.x, Math.max(d.y, 0), d.z);

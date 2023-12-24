@@ -60,7 +60,7 @@ public class TileMotor extends TTileOrient implements IFrame {
     }
 
     public void sendOrientUpdate() {
-        if (!world.isRemote)
+        if (!world().isRemote)
             streamToSend(writeStream(2).writeByte(orientation)).sendToChunk();
     }
 
@@ -115,20 +115,20 @@ public class TileMotor extends TTileOrient implements IFrame {
 
     @Override
     public void update() {
-        if (!world.isRemote && world.getBlockPowerInput(x, y, z) > 0) {
+        if (!world().isRemote && world().getBlockPowerInput(x, y, z) > 0) {
             BlockCoord pos = position().offset(side() ^ 1);
-            if (world.isAirBlock(pos.x, pos.y, pos.z)) return;
+            if (world().isAirBlock(pos.x, pos.y, pos.z)) return;
 
             if (
-                !RelocationAPI.instance.isMoving(world, pos.x, pos.y, pos.z) &&
-                    !RelocationAPI.instance.isMoving(world, x, y, z)
+                !RelocationAPI.instance.isMoving(world(), pos.x, pos.y, pos.z) &&
+                    !RelocationAPI.instance.isMoving(world(), x, y, z)
             ) {
                 Set<BlockPos> blocks = MCFramesAPI.instance.getStickResolver()
-                    .getStructure(world, pos.x, pos.y, pos.z, new BlockPos(x, y, z));
+                    .getStructure(world(), pos.x, pos.y, pos.z, new BlockPos(x, y, z));
 
                 Relocator r = RelocationAPI.instance.getRelocator();
                 r.push();
-                r.setWorld(world);
+                r.setWorld(world());
                 r.setDirection(getMoveDir());
                 r.setSpeed(1 / 16d);
                 r.addBlocks(blocks);
