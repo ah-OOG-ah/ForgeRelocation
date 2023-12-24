@@ -16,19 +16,6 @@ import net.minecraft.init.Items
 import net.minecraft.item.ItemStack
 import net.minecraftforge.oredict.ShapedOreRecipe
 
-class MCFramesProxy_server {
-  def preinit() {
-    blockMotor = new BlockMotor
-    blockFrame = new BlockFrame
-  }
-
-  def init() {
-    MCFramesRecipes.initRecipes()
-  }
-
-  def postinit() {}
-}
-
 class MCFramesProxy_client extends MCFramesProxy_server {
   @SideOnly(Side.CLIENT)
   override def preinit() {
@@ -41,22 +28,4 @@ class MCFramesProxy_client extends MCFramesProxy_server {
   }
 }
 
-object MCFramesProxy extends MCFramesProxy_client
 
-object MCFramesRecipes {
-  def initRecipes() {
-    // Frame
-    GameRegistry.addRecipe(
-      new ShapedOreRecipe(
-        new ItemStack(blockFrame, 8),
-        "sls",
-        "lsl",
-        "sls",
-        's': JC,
-        Items.stick,
-        'l': JC,
-        "logWood"
-      )
-    )
-  }
-}

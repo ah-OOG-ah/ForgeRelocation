@@ -11,7 +11,6 @@ import org.apache.logging.log4j.Logger;
 @Mod(
     modid = RelocationMod.modID,
     useMetadata = true,
-    modLanguage = "scala",
     guiFactory = "mrtjp.relocation.handler.GuiConfigFactory",
     acceptedMinecraftVersions = "[1.7.10]",
     dependencies = "required-after:MrTJPCoreMod",
