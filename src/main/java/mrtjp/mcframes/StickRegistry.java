@@ -92,9 +92,9 @@ public class StickRegistry {
     }
 
     public void addLatchSet(Pair<Block, Integer> b1, Pair<Block, Integer> b2) {
-        List<Pair<Block, Integer>> tmp = new ArrayList<>(latchMap.get(b1));
+        Set<Pair<Block, Integer>> tmp = latchMap.getOrDefault(b1, new HashSet<>());
         tmp.add(b2);
-        latchMap.put(b1, new HashSet<>(tmp));
+        latchMap.put(b1, tmp);
     }
 
     private IFrame getFrame(World w, BlockCoord pos) {

@@ -58,7 +58,7 @@ public class RelocationProxy_server {
     public void init() {}
 
     public void postinit() {
-        PacketCustom.assignHandler(RelocationSPH.instance.channel, RelocationSPH.instance);
+        PacketCustom.assignHandler(RelocationMod.modID, RelocationSPH.instance);
 
         FMLCommonHandler.instance().bus().register(RelocationEventHandler.instance);
         MinecraftForge.EVENT_BUS.register(RelocationEventHandler.instance);

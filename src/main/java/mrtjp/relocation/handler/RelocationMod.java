@@ -5,6 +5,7 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import mrtjp.relocation.BlockMovingRow;
+import mrtjp.relocation.api.RelocationAPI;
 import mrtjp.relocation.core.FRelocationCore;
 import org.apache.logging.log4j.Logger;
 
@@ -18,6 +19,10 @@ import org.apache.logging.log4j.Logger;
     version = RelocationMod.version
 )
 public class RelocationMod {
+
+    static {
+        RelocationAPI.instance = RelocationAPI_Impl.instance;
+    }
 
     public static final RelocationMod instance = new RelocationMod();
 

@@ -5,6 +5,7 @@ import mrtjp.mcframes.StickRegistry;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class MCFramesConfig extends ModConfig {
 
@@ -14,19 +15,19 @@ public class MCFramesConfig extends ModConfig {
         super("MCFrames");
     }
 
-    public static List<String> setMap = Arrays.asList(
+    public static String[] setMap = new String[]{
         "minecraft:bed -> minecraft:bed",
         "minecraft:wooden_door -> minecraft:wooden_door",
         "minecraft:iron_door -> minecraft:iron_door"
-    );
+    };
 
     @Override
     public void initValues() {
-        BaseCategory sets = new BaseCategory("Latched Sets", buildLatchSetsDesc);
+        BaseCategory sets = new BaseCategory(this, "Latched Sets", buildLatchSetsDesc);
         setMap = sets.put("latch registry", setMap, "");
         setMap = sets.put(
             "latch registry",
-            StickRegistry.instance.parseAndAddLatchSets(setMap),
+            StickRegistry.instance.parseAndAddLatchSets(Arrays.stream(setMap).collect(Collectors.toList())).toArray(new String[0]),
             true
         );
     }

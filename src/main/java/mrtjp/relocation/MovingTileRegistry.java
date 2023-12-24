@@ -73,6 +73,7 @@ public class MovingTileRegistry implements ITileMover {
     }
 
     public List<String> parseAndSetMovers(List<String> kvs) {
+
         List<Pair<String, String>> moverMap = parseKV(kvs);
         for (Pair<String, String> kv : preferredMovers) {
             if (!moverMap.contains(kv.getLeft())) moverMap.add(kv);
