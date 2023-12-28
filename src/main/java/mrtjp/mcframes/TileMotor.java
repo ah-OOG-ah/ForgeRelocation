@@ -115,16 +115,16 @@ public class TileMotor extends TTileOrient implements IFrame {
 
     @Override
     public void update() {
-        if (!world().isRemote && world().getBlockPowerInput(x, y, z) > 0) {
+        if (!world().isRemote && world().getBlockPowerInput(xCoord, yCoord, zCoord) > 0) {
             BlockCoord pos = position().offset(side() ^ 1);
             if (world().isAirBlock(pos.x, pos.y, pos.z)) return;
 
             if (
                 !RelocationAPI.instance.isMoving(world(), pos.x, pos.y, pos.z) &&
-                    !RelocationAPI.instance.isMoving(world(), x, y, z)
+                    !RelocationAPI.instance.isMoving(world(), xCoord, yCoord, zCoord)
             ) {
                 Set<BlockPos> blocks = MCFramesAPI.instance.getStickResolver()
-                    .getStructure(world(), pos.x, pos.y, pos.z, new BlockPos(x, y, z));
+                    .getStructure(world(), pos.x, pos.y, pos.z, new BlockPos(xCoord, yCoord, zCoord));
 
                 Relocator r = RelocationAPI.instance.getRelocator();
                 r.push();

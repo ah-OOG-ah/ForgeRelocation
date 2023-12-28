@@ -38,8 +38,8 @@ public class TileMovingRow extends InstancedBlockTile {
 
     @Override
     public void update() {
-        if (!MovementManager2.isMoving(world(), x, y, z)) {
-            world().setBlockToAir(x, y, z);
+        if (!MovementManager2.isMoving(world(), xCoord, yCoord, zCoord)) {
+            world().setBlockToAir(xCoord, yCoord, zCoord);
         }
     }
 
@@ -50,9 +50,9 @@ public class TileMovingRow extends InstancedBlockTile {
 
     @Override
     public Cuboid6 getBlockBounds() {
-        BlockStruct s = MovementManager2.getEnclosedStructure(world(), x, y, z);
+        BlockStruct s = MovementManager2.getEnclosedStructure(world(), xCoord, yCoord, zCoord);
         if (s != null) {
-            BlockRow r = s.rows.stream().filter(u -> u.contains(x, y, z)).findFirst().get();
+            BlockRow r = s.rows.stream().filter(u -> u.contains(xCoord, yCoord, zCoord)).findFirst().get();
             return TileMovingRow.getBoxFor(world(), r, s.progress);
         } else return Cuboid6.full;
     }
