@@ -122,7 +122,9 @@ public class StickRegistry {
         Pair<Block, Integer> b1 = JWorldLib.getBlockMetaPair(w, x, y, z);
         Pair<Block, Integer> b2 = JWorldLib.getBlockMetaPair(w, pos.x, pos.y, pos.z);
 
+        // suspicious - this may not be how it's supposed to be done
         Set<Pair<Block, Integer>> set = latchMap.getOrDefault(b1, latchMap.get(new ImmutablePair<>(b1.getLeft(), -1)));
+        if (set == null) return false;
         return set.contains(b2) || set.contains(new ImmutablePair<>(b2.getLeft(), -1));
     }
 }

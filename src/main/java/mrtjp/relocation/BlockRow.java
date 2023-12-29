@@ -17,24 +17,25 @@ import static java.lang.Math.min;
 
 public class BlockRow {
 
-    public static final BlockRow instance = new BlockRow(null, 0, 0);
-
-    public BlockCoord pos;
-    public int moveDir;
-    public int size;
+    public final BlockCoord pos;
+    public final int moveDir;
+    public final int size;
+    final List<BlockCoord> allBlocks;
+    final List<BlockCoord> preMoveBlocks;
+    final List<BlockCoord> postMoveBlocks;
 
     BlockRow(BlockCoord pos, int moveDir, int size) {
         this.pos = pos;
         this.moveDir = moveDir;
         this.size = size;
+
+        allBlocks = IntStream.rangeClosed(0, size).boxed()
+            .map(i -> pos.copy().offset(moveDir ^ 1, i)).collect(Collectors.toList());
+
+        // Not sure about these - they might need to be swapped
+        preMoveBlocks = allBlocks.stream().skip(1).collect(Collectors.toList());
+        postMoveBlocks = allBlocks.stream().limit(allBlocks.size() - 1).collect(Collectors.toList());
     }
-
-    List<BlockCoord> allBlocks = IntStream.rangeClosed(0, size).boxed()
-        .map(i -> pos.copy().offset(moveDir ^ 1, i)).collect(Collectors.toList());
-
-    // Not sure about these - they might need to be swapped
-    List<BlockCoord> preMoveBlocks = allBlocks.stream().skip(1).collect(Collectors.toList());
-    List<BlockCoord> postMoveBlocks = allBlocks.stream().limit(allBlocks.size() - 1).collect(Collectors.toList());
 
     public boolean contains(int x, int y, int z) {
 

@@ -14,6 +14,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public class StickResolver_Impl extends StickResolver {
@@ -35,7 +36,9 @@ public class StickResolver_Impl extends StickResolver {
         world = w;
         start = new BlockCoord(x, y, z);
         excl = Arrays.stream(ex).map(b -> new BlockCoord(b.x, b.y, b.z)).collect(Collectors.toSet());
-        Set<BlockCoord> result = iterate(Arrays.asList(start));
+        ArrayList<BlockCoord> tmp = new ArrayList<>();
+        tmp.add(start);
+        Set<BlockCoord> result = iterate(tmp);
         world = null;
         start = null;
         excl = null;
@@ -44,20 +47,19 @@ public class StickResolver_Impl extends StickResolver {
 
 
     private Set<BlockCoord> iterate(List<BlockCoord> open) {
-        return iterate(open, null);
+        return iterate(open, new HashSet<>());
     }
 
     private Set<BlockCoord> iterate(
         List<BlockCoord> open,
         Set<BlockCoord> closed
     ) {
-        if (closed == null) closed = new HashSet<>();
 
         if (open.isEmpty()) {
             return closed;
         }
 
-        BlockCoord next = open.get(open.size() - 1);
+        BlockCoord next = open.get(0);
 
         Block b = WorldLib.getBlock(world, next);
         if (b instanceof Block) {
