@@ -29,7 +29,7 @@ public class RelocationMod {
     public static final String modID = "ForgeRelocation";
     public static final String modName = "ForgeRelocation";
     public static final String version = "GRADLETOKEN_VERSION";
-    public final Logger log = FRelocationCore.LOGGER;
+    public static final Logger log = FRelocationCore.LOGGER;
 
     public BlockMovingRow blockMovingRow;
 

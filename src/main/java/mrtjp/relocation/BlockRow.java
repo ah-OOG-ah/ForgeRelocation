@@ -1,6 +1,7 @@
 package mrtjp.relocation;
 
 import codechicken.lib.vec.BlockCoord;
+import mrtjp.core.math.JMathLib;
 import mrtjp.core.math.MathLib;
 import mrtjp.core.world.WorldLib;
 import net.minecraft.init.Blocks;
@@ -39,7 +40,7 @@ public class BlockRow {
 
     public boolean contains(int x, int y, int z) {
 
-        if (MathLib.normal(x, y, z, moveDir) == MathLib.normal(pos, moveDir)) {
+        if (JMathLib.normal(x, y, z, moveDir).equals(JMathLib.normal(pos, moveDir))) {
             int b1 = MathLib.basis(pos, moveDir);
             int b2 = b1 + size * MathLib.shift(moveDir ^ 1);
             return IntStream.rangeClosed(min(b1, b2), max(b1, b2)).anyMatch(value -> value == MathLib.basis(x, y, z, moveDir));

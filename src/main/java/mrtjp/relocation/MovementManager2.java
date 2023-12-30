@@ -7,6 +7,7 @@ import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapBuilder;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import mrtjp.core.math.JMathLib;
 import mrtjp.core.math.MathLib;
 import mrtjp.relocation.api.IMovementCallback;
 import mrtjp.relocation.handler.RelocationConfig;
@@ -16,6 +17,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import scala.Tuple2;
@@ -139,10 +141,6 @@ public class MovementManager2 {
         return getWorldStructs(w).structs.stream().filter(s -> s.contains(x, y, z)).findFirst().orElse(null);
     }
 
-    private static  <L, R> Pair<L, R> tsD(Tuple2<?, ?> in) {
-        return new MutablePair<>((L) in._1, (R) in._2);
-    }
-
     public static boolean tryStartMove(
         World w,
         Set<BlockCoord> blocks,
@@ -152,34 +150,36 @@ public class MovementManager2 {
     ) {
         if (blocks.size() > RelocationConfig.instance.moveLimit) return false;
 
-        // TODO: Scala moment
         Multimap<Pair<Integer, Integer>, Integer> map = MultimapBuilder.hashKeys().arrayListValues().build();
         for (BlockCoord b : blocks) {
-            map.put(tsD(MathLib.normal(b, moveDir)), MathLib.basis(b, moveDir));
+            map.put(JMathLib.normal(b, moveDir), MathLib.basis(b, moveDir));
         }
 
         int shift = ((moveDir & 1) == 1) ? 1 : -1;
-        LinkedHashSet<BlockRow> rowB = new LinkedHashSet<>();
+        LinkedHashSet<BlockRow> rows = new LinkedHashSet<>();
         for (Pair<Integer, Integer> normal : map.keySet()) {
             Integer[] line = map.get(normal).toArray(new Integer[0]);
             Integer[] sline = (shift == 1) ? Arrays.stream(line).sorted().toArray(Integer[]::new) : Arrays.stream(line).sorted(Collections.reverseOrder()).toArray(Integer[]::new);
-            for (int i = 0; i < sline.length; ++i) {
+            for (Pair<Integer, Integer> e : JMathLib.splitLine(Arrays.asList(sline), shift)) {
 
-                BlockCoord coord = MathLib.rhrAxis(moveDir, new Tuple2<>(normal.getKey(), normal.getValue()), i + shift);
-                rowB.add(new BlockRow(coord, moveDir, sline[i]));
+                int basis = e.getLeft();
+                int size = e.getRight();
+
+                BlockCoord coord = MathLib.rhrAxis(moveDir, new Tuple2<>(normal.getKey(), normal.getValue()), basis + shift);
+                rows.add(new BlockRow(coord, moveDir, size));
             }
         }
 
-        if (rowB.stream()
+        if (rows.stream()
             .anyMatch(row -> !MovingTileRegistry.instance.canRunOverBlock(w, row.pos.x, row.pos.y, row.pos.z))
         ) return false;
 
-        for (BlockRow r : rowB) TileMovingRow.setBlockForRow(w, r);
+        for (BlockRow r : rows) TileMovingRow.setBlockForRow(w, r);
 
         BlockStruct struct = new BlockStruct();
         struct.id = BLOCK_STRUCT.claimID();
         struct.speed = speed;
-        struct.rows = rowB;
+        struct.rows = rows;
         struct.callback = new WeakReference<>(c);
         addStructToWorld(w, struct);
         sendStruct(w, struct);

@@ -151,7 +151,8 @@ public class MovingTileRegistry implements ITileMover {
                 z,
                 w.getBlock(x, y, z)
             );
+        } else {
+            return false;
         }
-        else return false;
     }
 }
