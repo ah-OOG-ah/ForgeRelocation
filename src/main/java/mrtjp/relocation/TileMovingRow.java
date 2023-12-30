@@ -16,7 +16,7 @@ import static mrtjp.relocation.handler.RelocationMod.instance;
 public class TileMovingRow extends InstancedBlockTile {
 
     public static void setBlockForRow(World w, BlockRow r) {
-        w.setBlock(r.pos.x, r.pos.y, r.pos.z, new BlockMovingRow(), 0, 3);
+        w.setBlock(r.pos.x, r.pos.y, r.pos.z, instance.blockMovingRow, 0, 3);
     }
 
     public static Cuboid6 getBoxFor(World w, BlockRow r, double progress) {
