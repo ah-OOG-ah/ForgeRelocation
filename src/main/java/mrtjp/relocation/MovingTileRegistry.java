@@ -105,11 +105,11 @@ public class MovingTileRegistry implements ITileMover {
     }
 
     private ITileMover getHandler(Block b, int m) {
-        return blockMetaMap.computeIfAbsent(
+        return blockMetaMap.getOrDefault(
             new ImmutablePair<>(b, m),
-            (k) -> blockMetaMap.computeIfAbsent(
+            blockMetaMap.getOrDefault(
                 new ImmutablePair<>(b, -1),
-                (k1) -> modMap.computeIfAbsent(BlockLib.getModId(b), (k2) -> defaultMover)
+                modMap.getOrDefault(BlockLib.getModId(b), defaultMover)
             )
         );
     }
