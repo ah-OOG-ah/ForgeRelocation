@@ -6,10 +6,10 @@ import codechicken.lib.packet.PacketCustom;
 import cpw.mods.fml.common.FMLCommonHandler;
 import mrtjp.relocation.BlockMovingRow;
 import mrtjp.relocation.CoordPushTileMover;
-import mrtjp.relocation.events.ServerHandler;
 import mrtjp.relocation.SaveLoadTileMover;
 import mrtjp.relocation.StaticTileMover;
 import mrtjp.relocation.api.RelocationAPI;
+import mrtjp.relocation.events.ServerHandler;
 
 public class CommonProxy {
 
@@ -51,10 +51,12 @@ public class CommonProxy {
         API.registerPreferredMover("mod:ProjRed|Transportation", "coordpush");
     }
 
-    public void init() {}
+    public void init() {
+
+        PacketCustom.assignHandler(RelocationSPH.instance.channel, RelocationSPH.instance);
+    }
 
     public void postinit() {
-        PacketCustom.assignHandler(RelocationMod.modID, RelocationSPH.instance);
 
         FMLCommonHandler.instance().bus().register(ServerHandler.instance);
         MinecraftForge.EVENT_BUS.register(ServerHandler.instance);

@@ -1,6 +1,4 @@
 dependencies {
 
-    //api("com.google:guava:17.0")
-
     api("com.github.GTNewHorizons:MrTJPCore:compat:dev")
 }

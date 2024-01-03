@@ -1,11 +1,10 @@
 package mrtjp.relocation.handler;
 
-import cpw.mods.fml.common.SidedProxy;
-import cpw.mods.fml.relauncher.Side;
 import org.apache.logging.log4j.Logger;
 
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
+import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
@@ -28,7 +27,9 @@ public final class RelocationMod {
     }
 
     public static final RelocationMod instance = new RelocationMod();
-    @SidedProxy(clientSide = "mrtjp.relocation.handler.ClientProxy", serverSide = "mrtjp.relocation.handler.CommonProxy")
+    @SidedProxy(
+            clientSide = "mrtjp.relocation.handler.ClientProxy",
+            serverSide = "mrtjp.relocation.handler.CommonProxy")
     public static CommonProxy proxy;
 
     public static final String modID = "ForgeRelocation";

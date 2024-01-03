@@ -10,11 +10,17 @@ import mrtjp.relocation.events.ClientHandler;
 
 public class ClientProxy extends CommonProxy {
 
+    @Override
+    public void init() {
+        super.init();
+
+        PacketCustom.assignHandler(RelocationCPH.instance.channel, RelocationCPH.instance);
+    }
+
     @SideOnly(Side.CLIENT)
     @Override
     public void postinit() {
         super.postinit();
-        PacketCustom.assignHandler(RelocationCPH.instance.channel, RelocationCPH.instance);
 
         FMLCommonHandler.instance().bus().register(ClientHandler.instance);
         MinecraftForge.EVENT_BUS.register(ClientHandler.instance);

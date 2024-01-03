@@ -1,11 +1,11 @@
 package mrtjp.relocation.events;
 
-import mrtjp.relocation.MovementManager2;
 import net.minecraftforge.event.world.ChunkWatchEvent;
 import net.minecraftforge.event.world.WorldEvent;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
+import mrtjp.relocation.MovementManager2;
 import mrtjp.relocation.handler.RelocationSPH;
 
 public class ServerHandler {

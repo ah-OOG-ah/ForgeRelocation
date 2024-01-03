@@ -16,7 +16,9 @@ import mrtjp.relocation.MovingRenderer;
 @Mixin(RenderBlocks.class)
 public class MixinRenderBlocks {
 
-    @Redirect(method = "renderBlockByRenderType", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/Block;getRenderType()I", ordinal = 0))
+    @Redirect(
+            method = "renderBlockByRenderType",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/block/Block;getRenderType()I", ordinal = 0))
     private int frelocation$vanishMovingBlocks(Block block, @Local(ordinal = 0) int x, @Local(ordinal = 1) int y,
             @Local(ordinal = 2) int z) {
 

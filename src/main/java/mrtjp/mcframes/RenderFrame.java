@@ -72,9 +72,10 @@ public class RenderFrame implements ISimpleBlockRenderingHandler {
 
     public void renderWorldBlock(RenderBlocks r, IBlockAccess w, int x, int y, int z, int meta) {
         TextureUtils.bindAtlas(0);
-        CCRenderState.reset();
-        CCRenderState.lightMatrix.locate(w, x, y, z);
-        CCRenderState.setBrightness(w, x, y, z);
+        CCRenderState ccrsi = CCRenderState.instance();
+        ccrsi.reset();
+        ccrsi.lightMatrix.locate(w, x, y, z);
+        ccrsi.setBrightness(w, x, y, z);
 
         if (r.hasOverrideBlockTexture()) {
             getOrGenerateModel(0).render(new Translation(x, y, z), new IconTransformation(r.overrideBlockTexture));
@@ -83,15 +84,16 @@ public class RenderFrame implements ISimpleBlockRenderingHandler {
 
     public void renderInvBlock(RenderBlocks r, int meta) {
         TextureUtils.bindAtlas(0);
-        CCRenderState.reset();
-        CCRenderState.setDynamic();
-        CCRenderState.pullLightmap();
+        CCRenderState ccrsi = CCRenderState.instance();
+        ccrsi.reset();
+        ccrsi.setDynamic();
+        ccrsi.pullLightmap();
 
-        CCRenderState.startDrawing();
+        ccrsi.startDrawing();
         RenderFrame.instance.render(new Vector3(-0.5, -0.5, -0.5), 0);
 
-        CCRenderState.render();
-        CCRenderState.draw();
+        ccrsi.render();
+        ccrsi.draw();
     }
 
     public void registerIcons(IIconRegister reg) {
