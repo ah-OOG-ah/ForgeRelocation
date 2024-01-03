@@ -1,5 +1,17 @@
 package mrtjp.mcframes;
 
+import static codechicken.lib.render.CCModel.combine;
+import static codechicken.lib.render.CCModel.parseObjModels;
+
+import java.io.IOException;
+import java.util.ArrayList;
+
+import net.minecraft.block.Block;
+import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.util.IIcon;
+import net.minecraft.world.IBlockAccess;
+
 import codechicken.lib.render.CCModel;
 import codechicken.lib.render.CCRenderState;
 import codechicken.lib.render.TextureUtils;
@@ -9,22 +21,10 @@ import codechicken.lib.vec.Translation;
 import codechicken.lib.vec.Vector3;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import mrtjp.core.vec.InvertX$;
-import net.minecraft.block.Block;
-import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.util.IIcon;
-import net.minecraft.world.IBlockAccess;
-
-import java.io.IOException;
-import java.util.ArrayList;
-
-import static codechicken.lib.render.CCModel.combine;
-import static codechicken.lib.render.CCModel.parseObjModels;
 
 public class RenderFrame implements ISimpleBlockRenderingHandler {
 
     public static final RenderFrame instance = new RenderFrame();
-
 
     public int renderID = -1;
     IIcon icon = null;
@@ -36,14 +36,10 @@ public class RenderFrame implements ISimpleBlockRenderingHandler {
         CCModel m = null;
         try {
             m = combine(
-                parseObjModels(
-                    this.getClass()
-                        .getResource("/assets/mcframes/obj/" + name + ".obj")
-                        .openStream(),
-                    7,
-                    InvertX$.MODULE$
-                ).values()
-            );
+                    parseObjModels(
+                            this.getClass().getResource("/assets/mcframes/obj/" + name + ".obj").openStream(),
+                            7,
+                            InvertX$.MODULE$).values());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -64,47 +60,24 @@ public class RenderFrame implements ISimpleBlockRenderingHandler {
     }
 
     @Override
-    public void renderInventoryBlock(
-        Block b,
-        int meta,
-        int id,
-        RenderBlocks rb
-    ) {
+    public void renderInventoryBlock(Block b, int meta, int id, RenderBlocks rb) {
         renderInvBlock(rb, meta);
     }
 
     @Override
-    public boolean renderWorldBlock(
-        IBlockAccess world,
-        int x,
-        int y,
-        int z,
-        Block b,
-        int id,
-        RenderBlocks rb
-    ) {
+    public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, Block b, int id, RenderBlocks rb) {
         renderWorldBlock(rb, world, x, y, z, world.getBlockMetadata(x, y, z));
         return true;
     }
 
-    public void renderWorldBlock(
-        RenderBlocks r,
-        IBlockAccess w,
-        int x,
-        int y,
-        int z,
-        int meta
-    ) {
+    public void renderWorldBlock(RenderBlocks r, IBlockAccess w, int x, int y, int z, int meta) {
         TextureUtils.bindAtlas(0);
         CCRenderState.reset();
         CCRenderState.lightMatrix.locate(w, x, y, z);
         CCRenderState.setBrightness(w, x, y, z);
 
         if (r.hasOverrideBlockTexture()) {
-            getOrGenerateModel(0).render(
-                new Translation(x, y, z),
-                new IconTransformation(r.overrideBlockTexture)
-            );
+            getOrGenerateModel(0).render(new Translation(x, y, z), new IconTransformation(r.overrideBlockTexture));
         } else RenderFrame.instance.render(new Vector3(x, y, z), 0);
     }
 
@@ -126,10 +99,7 @@ public class RenderFrame implements ISimpleBlockRenderingHandler {
     }
 
     public void render(Vector3 pos, int mask) {
-        getOrGenerateModel(mask).render(
-            pos.translation(),
-            new IconTransformation(icon)
-        );
+        getOrGenerateModel(mask).render(pos.translation(), new IconTransformation(icon));
     }
 
     public CCModel getOrGenerateModel(int mask) {

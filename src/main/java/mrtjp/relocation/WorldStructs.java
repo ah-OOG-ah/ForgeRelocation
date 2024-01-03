@@ -1,13 +1,13 @@
 package mrtjp.relocation;
 
-import net.minecraft.util.ChunkCoordinates;
-import net.minecraft.world.ChunkCoordIntPair;
-
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import net.minecraft.world.ChunkCoordIntPair;
+
 public class WorldStructs {
+
     public Set<BlockStruct> structs = new HashSet<>();
 
     public boolean isEmpty() {

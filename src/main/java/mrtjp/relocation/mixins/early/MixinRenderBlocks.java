@@ -22,7 +22,8 @@ public class MixinRenderBlocks {
     private int frelocation$vanishMovingBlocks(Block block, @Local(ordinal = 0) int x, @Local(ordinal = 1) int y,
             @Local(ordinal = 2) int z) {
 
-        if (MovingRenderer.instance.renderHack && MovementManager2.isMoving(Minecraft.getMinecraft().theWorld, x, y, z)) {
+        if (MovingRenderer.instance.renderHack
+                && MovementManager2.isMoving(Minecraft.getMinecraft().theWorld, x, y, z)) {
             return -1;
         } else {
             return block.getRenderType();

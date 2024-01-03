@@ -1,8 +1,9 @@
 package mrtjp.relocation;
 
-import codechicken.lib.vec.BlockCoord;
-import codechicken.lib.vec.Vector3;
-import mrtjp.core.math.MathLib;
+import static org.lwjgl.opengl.GL11.*;
+
+import java.util.Arrays;
+
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.OpenGlHelper;
@@ -14,10 +15,9 @@ import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.world.World;
 
-import java.util.Arrays;
-import java.util.List;
-
-import static org.lwjgl.opengl.GL11.*;
+import codechicken.lib.vec.BlockCoord;
+import codechicken.lib.vec.Vector3;
+import mrtjp.core.math.MathLib;
 
 public class MovingRenderer {
 
@@ -45,12 +45,7 @@ public class MovingRenderer {
         if (engine != null) engine.bindTexture(TextureMap.locationBlocksTexture);
         mc.entityRenderer.enableLightmap(frame);
 
-        int light = world.getLightBrightnessForSkyBlocks(
-            x,
-            y,
-            z,
-            block.getLightValue(world, x, y, z)
-        );
+        int light = world.getLightBrightnessForSkyBlocks(x, y, z, block.getLightValue(world, x, y, z));
         int l1 = light % 65536;
         int l2 = light / 65536;
 
@@ -65,16 +60,9 @@ public class MovingRenderer {
         for (int pass : Arrays.asList(1, 2)) {
             tes.startDrawingQuads();
             tes.setTranslation(
-                -TileEntityRendererDispatcher.staticPlayerX + MathLib
-                    .clamp(-1f, 1f, (float) rpos.x),
-                -TileEntityRendererDispatcher.staticPlayerY + MathLib
-                    .clamp(-1f, 1f, (float) rpos.y),
-                -TileEntityRendererDispatcher.staticPlayerZ + MathLib.clamp(
-                    -1f,
-                    1f,
-                        (float) rpos.z
-                )
-            );
+                    -TileEntityRendererDispatcher.staticPlayerX + MathLib.clamp(-1f, 1f, (float) rpos.x),
+                    -TileEntityRendererDispatcher.staticPlayerY + MathLib.clamp(-1f, 1f, (float) rpos.y),
+                    -TileEntityRendererDispatcher.staticPlayerZ + MathLib.clamp(-1f, 1f, (float) rpos.z));
             tes.setColorOpaque(1, 1, 1);
 
             if (block.canRenderInPass(pass)) {
@@ -115,7 +103,6 @@ public class MovingRenderer {
     }
 
     public Vector3 renderPos(BlockStruct s, float partial) {
-        return new Vector3(BlockCoord.sideOffsets[s.moveDir()])
-            .multiply(s.progress + s.speed * partial);
+        return new Vector3(BlockCoord.sideOffsets[s.moveDir()]).multiply(s.progress + s.speed * partial);
     }
 }

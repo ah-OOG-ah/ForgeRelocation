@@ -1,13 +1,13 @@
 package mrtjp.relocation;
 
+import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
+
 import codechicken.lib.vec.BlockCoord;
 import mrtjp.core.world.WorldLib;
 import mrtjp.relocation.api.ITileMover;
-import net.minecraft.block.Block;
-import net.minecraft.init.Blocks;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
 import scala.Tuple3;
 
 public class CoordPushTileMover implements ITileMover {

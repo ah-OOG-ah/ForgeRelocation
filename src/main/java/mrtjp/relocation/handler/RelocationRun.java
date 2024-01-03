@@ -1,11 +1,12 @@
 package mrtjp.relocation.handler;
 
-import codechicken.lib.vec.BlockCoord;
-import mrtjp.relocation.api.IMovementCallback;
-import net.minecraft.world.World;
-
 import java.util.HashSet;
 import java.util.Set;
+
+import net.minecraft.world.World;
+
+import codechicken.lib.vec.BlockCoord;
+import mrtjp.relocation.api.IMovementCallback;
 
 public class RelocationRun {
 

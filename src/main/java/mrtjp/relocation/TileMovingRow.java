@@ -1,17 +1,18 @@
 package mrtjp.relocation;
 
-import codechicken.lib.vec.BlockCoord;
-import codechicken.lib.vec.Cuboid6;
-import codechicken.lib.vec.Vector3;
-import mrtjp.core.block.InstancedBlockTile;
+import static mrtjp.relocation.handler.RelocationMod.instance;
+
+import java.util.List;
+
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
 
-import java.util.List;
-
-import static mrtjp.relocation.handler.RelocationMod.instance;
+import codechicken.lib.vec.BlockCoord;
+import codechicken.lib.vec.Cuboid6;
+import codechicken.lib.vec.Vector3;
+import mrtjp.core.block.InstancedBlockTile;
 
 public class TileMovingRow extends InstancedBlockTile {
 
@@ -64,10 +65,8 @@ public class TileMovingRow extends InstancedBlockTile {
 
     public void pushEntities(BlockRow r, double progress) {
 
-        AxisAlignedBB box = Cuboid6.full.copy()
-            .add(new Vector3(r.preMoveBlocks.get(0)))
-            .add(new Vector3(BlockCoord.sideOffsets[r.moveDir]).multiply(progress))
-            .toAABB();
+        AxisAlignedBB box = Cuboid6.full.copy().add(new Vector3(r.preMoveBlocks.get(0)))
+                .add(new Vector3(BlockCoord.sideOffsets[r.moveDir]).multiply(progress)).toAABB();
 
         double dp = ((progress >= 1.0) ? progress + 0.1 : progress) - prevProg;
         Vector3 d = new Vector3(BlockCoord.sideOffsets[r.moveDir]).multiply(dp);

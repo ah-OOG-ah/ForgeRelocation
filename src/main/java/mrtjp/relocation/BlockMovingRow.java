@@ -1,11 +1,11 @@
 package mrtjp.relocation;
 
-import mrtjp.core.block.InstancedBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import scala.runtime.Null$;
+
+import mrtjp.core.block.InstancedBlock;
 
 public class BlockMovingRow extends InstancedBlock {
 

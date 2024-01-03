@@ -1,14 +1,5 @@
 package mrtjp.relocation;
 
-import cpw.mods.fml.common.Loader;
-import mrtjp.core.block.BlockLib;
-import mrtjp.core.world.WorldLib;
-import mrtjp.relocation.api.ITileMover;
-import net.minecraft.block.Block;
-import net.minecraft.world.World;
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,6 +7,17 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+
+import net.minecraft.block.Block;
+import net.minecraft.world.World;
+
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
+
+import cpw.mods.fml.common.Loader;
+import mrtjp.core.block.BlockLib;
+import mrtjp.core.world.WorldLib;
+import mrtjp.relocation.api.ITileMover;
 
 public class MovingTileRegistry implements ITileMover {
 
@@ -106,12 +108,10 @@ public class MovingTileRegistry implements ITileMover {
 
     private ITileMover getHandler(Block b, int m) {
         return blockMetaMap.getOrDefault(
-            new ImmutablePair<>(b, m),
-            blockMetaMap.getOrDefault(
-                new ImmutablePair<>(b, -1),
-                modMap.getOrDefault(BlockLib.getModId(b), defaultMover)
-            )
-        );
+                new ImmutablePair<>(b, m),
+                blockMetaMap.getOrDefault(
+                        new ImmutablePair<>(b, -1),
+                        modMap.getOrDefault(BlockLib.getModId(b), defaultMover)));
     }
 
     @Override
@@ -144,13 +144,7 @@ public class MovingTileRegistry implements ITileMover {
 
     public boolean canRunOverBlock(World w, int x, int y, int z) {
         if (w.blockExists(x, y, z)) {
-            return w.isAirBlock(x, y, z) || WorldLib.isBlockSoft(
-                w,
-                x,
-                y,
-                z,
-                w.getBlock(x, y, z)
-            );
+            return w.isAirBlock(x, y, z) || WorldLib.isBlockSoft(w, x, y, z, w.getBlock(x, y, z));
         } else {
             return false;
         }

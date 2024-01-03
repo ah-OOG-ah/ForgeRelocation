@@ -1,5 +1,7 @@
 package mrtjp.relocation.handler;
 
+import org.apache.logging.log4j.Logger;
+
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
@@ -7,17 +9,15 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import mrtjp.relocation.BlockMovingRow;
 import mrtjp.relocation.api.RelocationAPI;
 import mrtjp.relocation.core.FRelocationCore;
-import org.apache.logging.log4j.Logger;
 
 @Mod(
-    modid = RelocationMod.modID,
-    useMetadata = true,
-    guiFactory = "mrtjp.relocation.handler.GuiConfigFactory",
-    acceptedMinecraftVersions = "[1.7.10]",
-    dependencies = "required-after:MrTJPCoreMod",
-    name = RelocationMod.modName,
-    version = RelocationMod.version
-)
+        modid = RelocationMod.modID,
+        useMetadata = true,
+        guiFactory = "mrtjp.relocation.handler.GuiConfigFactory",
+        acceptedMinecraftVersions = "[1.7.10]",
+        dependencies = "required-after:MrTJPCoreMod",
+        name = RelocationMod.modName,
+        version = RelocationMod.version)
 public class RelocationMod {
 
     static {

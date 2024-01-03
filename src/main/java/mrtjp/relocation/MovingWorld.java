@@ -1,8 +1,5 @@
 package mrtjp.relocation;
 
-import codechicken.lib.vec.BlockCoord;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.tileentity.TileEntity;
@@ -11,6 +8,10 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.util.ForgeDirection;
+
+import codechicken.lib.vec.BlockCoord;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class MovingWorld implements IBlockAccess {
 
@@ -42,12 +43,7 @@ public class MovingWorld implements IBlockAccess {
 
     @SideOnly(Side.CLIENT)
     @Override
-    public int getLightBrightnessForSkyBlocks(
-        int x,
-        int y,
-        int z,
-        int light
-    ) {
+    public int getLightBrightnessForSkyBlocks(int x, int y, int z, int light) {
         if (MovementManager2.isMoving(Minecraft.getMinecraft().theWorld, x, y, z)) {
             int l1 = computeLightValue(x, y, z, EnumSkyBlock.Sky);
             int l2 = computeLightValue(x, y, z, EnumSkyBlock.Block);
@@ -91,13 +87,7 @@ public class MovingWorld implements IBlockAccess {
     }
 
     @Override
-    public boolean isSideSolid(
-        int x,
-        int y,
-        int z,
-        ForgeDirection side,
-        boolean _default
-    ) {
+    public boolean isSideSolid(int x, int y, int z, ForgeDirection side, boolean _default) {
         return world.isSideSolid(x, y, z, side, _default);
     }
 }

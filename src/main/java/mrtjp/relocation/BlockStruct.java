@@ -1,12 +1,6 @@
 package mrtjp.relocation;
 
-import codechicken.lib.data.MCDataInput;
-import codechicken.lib.data.MCDataOutput;
-import codechicken.lib.vec.BlockCoord;
-import mrtjp.core.world.WorldLib;
-import mrtjp.relocation.api.IMovementCallback;
-import net.minecraft.world.ChunkCoordIntPair;
-import net.minecraft.world.World;
+import static java.lang.Math.min;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -14,7 +8,14 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import static java.lang.Math.min;
+import net.minecraft.world.ChunkCoordIntPair;
+import net.minecraft.world.World;
+
+import codechicken.lib.data.MCDataInput;
+import codechicken.lib.data.MCDataOutput;
+import codechicken.lib.vec.BlockCoord;
+import mrtjp.core.world.WorldLib;
+import mrtjp.relocation.api.IMovementCallback;
 
 public class BlockStruct {
 
@@ -45,7 +46,7 @@ public class BlockStruct {
         l.addAll(r);
         return l;
     }).orElseGet(ArrayList::new));
-    Set<BlockCoord>  postMoveBlocks = new HashSet<>(rows.stream().map(br -> br.postMoveBlocks).reduce((l, r) -> {
+    Set<BlockCoord> postMoveBlocks = new HashSet<>(rows.stream().map(br -> br.postMoveBlocks).reduce((l, r) -> {
         l.addAll(r);
         return l;
     }).orElseGet(ArrayList::new));
@@ -129,11 +130,7 @@ public class BlockStruct {
         speed = in.readFloat();
         LinkedHashSet<BlockRow> rb = new LinkedHashSet<>();
         for (int i = 0; i <= in.readUByte(); ++i) {
-            rb.add(new BlockRow(
-                WorldLib.unpackCoords(in.readLong()),
-                in.readUByte(),
-                in.readUShort()
-            ));
+            rb.add(new BlockRow(WorldLib.unpackCoords(in.readLong()), in.readUByte(), in.readUShort()));
         }
         rows = rb;
     }

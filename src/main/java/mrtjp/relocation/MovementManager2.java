@@ -1,26 +1,6 @@
 package mrtjp.relocation;
 
-import codechicken.lib.data.MCDataInput;
-import codechicken.lib.data.MCDataOutput;
-import codechicken.lib.vec.BlockCoord;
-import com.google.common.collect.Multimap;
-import com.google.common.collect.MultimapBuilder;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import mrtjp.core.math.JMathLib;
-import mrtjp.core.math.MathLib;
-import mrtjp.relocation.api.IMovementCallback;
-import mrtjp.relocation.handler.RelocationConfig;
-import mrtjp.relocation.handler.RelocationSPH;
-import net.minecraft.client.Minecraft;
-import net.minecraft.init.Blocks;
-import net.minecraft.world.ChunkCoordIntPair;
-import net.minecraft.world.World;
-import net.minecraftforge.common.DimensionManager;
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.MutablePair;
-import org.apache.commons.lang3.tuple.Pair;
-import scala.Tuple2;
+import static mrtjp.relocation.BlockStruct.BLOCK_STRUCT;
 
 import java.lang.ref.WeakReference;
 import java.util.AbstractMap;
@@ -34,7 +14,28 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static mrtjp.relocation.BlockStruct.BLOCK_STRUCT;
+import net.minecraft.client.Minecraft;
+import net.minecraft.init.Blocks;
+import net.minecraft.world.ChunkCoordIntPair;
+import net.minecraft.world.World;
+import net.minecraftforge.common.DimensionManager;
+
+import org.apache.commons.lang3.tuple.Pair;
+
+import com.google.common.collect.Multimap;
+import com.google.common.collect.MultimapBuilder;
+
+import codechicken.lib.data.MCDataInput;
+import codechicken.lib.data.MCDataOutput;
+import codechicken.lib.vec.BlockCoord;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import mrtjp.core.math.JMathLib;
+import mrtjp.core.math.MathLib;
+import mrtjp.relocation.api.IMovementCallback;
+import mrtjp.relocation.handler.RelocationConfig;
+import mrtjp.relocation.handler.RelocationSPH;
+import scala.Tuple2;
 
 public class MovementManager2 {
 
@@ -59,12 +60,14 @@ public class MovementManager2 {
     @SideOnly(Side.CLIENT)
     private static World getClientWorld(int dim) {
         World w = Minecraft.getMinecraft().theWorld;
-        if (w.provider.dimensionId == dim) return w; else return null;
+        if (w.provider.dimensionId == dim) return w;
+        else return null;
     }
 
     public static boolean writeDesc(World w, Set<ChunkCoordIntPair> chunks, MCDataOutput out) {
         boolean send = false;
-        for (BlockStruct s : getWorldStructs(w).structs.stream().filter(s -> s.getChunks().stream().anyMatch(chunks::contains)).collect(Collectors.toSet())) {
+        for (BlockStruct s : getWorldStructs(w).structs.stream()
+                .filter(s -> s.getChunks().stream().anyMatch(chunks::contains)).collect(Collectors.toSet())) {
             send = true;
             out.writeShort(s.id);
             s.writeDesc(out);
@@ -109,9 +112,8 @@ public class MovementManager2 {
             }
             default: {
                 throw new RuntimeException(
-                    "DC: Packet with ID ${key} was not handled. " +
-                    "Skipped ${in.asInstanceOf[PacketCustom].getByteBuf.array().length} bytes."
-                );
+                        "DC: Packet with ID ${key} was not handled. "
+                                + "Skipped ${in.asInstanceOf[PacketCustom].getByteBuf.array().length} bytes.");
             }
         }
     }
@@ -141,13 +143,8 @@ public class MovementManager2 {
         return getWorldStructs(w).structs.stream().filter(s -> s.contains(x, y, z)).findFirst().orElse(null);
     }
 
-    public static boolean tryStartMove(
-        World w,
-        Set<BlockCoord> blocks,
-        int moveDir,
-        double speed,
-        IMovementCallback c
-    ) {
+    public static boolean tryStartMove(World w, Set<BlockCoord> blocks, int moveDir, double speed,
+            IMovementCallback c) {
         if (blocks.size() > RelocationConfig.instance.moveLimit) return false;
 
         Multimap<Pair<Integer, Integer>, Integer> map = MultimapBuilder.hashKeys().arrayListValues().build();
@@ -159,20 +156,22 @@ public class MovementManager2 {
         LinkedHashSet<BlockRow> rows = new LinkedHashSet<>();
         for (Pair<Integer, Integer> normal : map.keySet()) {
             Integer[] line = map.get(normal).toArray(new Integer[0]);
-            Integer[] sline = (shift == 1) ? Arrays.stream(line).sorted().toArray(Integer[]::new) : Arrays.stream(line).sorted(Collections.reverseOrder()).toArray(Integer[]::new);
+            Integer[] sline = (shift == 1) ? Arrays.stream(line).sorted().toArray(Integer[]::new)
+                    : Arrays.stream(line).sorted(Collections.reverseOrder()).toArray(Integer[]::new);
             for (Pair<Integer, Integer> e : JMathLib.splitLine(Arrays.asList(sline), shift)) {
 
                 int basis = e.getLeft();
                 int size = e.getRight();
 
-                BlockCoord coord = MathLib.rhrAxis(moveDir, new Tuple2<>(normal.getKey(), normal.getValue()), basis + shift);
+                BlockCoord coord = MathLib
+                        .rhrAxis(moveDir, new Tuple2<>(normal.getKey(), normal.getValue()), basis + shift);
                 rows.add(new BlockRow(coord, moveDir, size));
             }
         }
 
-        if (rows.stream()
-            .anyMatch(row -> !MovingTileRegistry.instance.canRunOverBlock(w, row.pos.x, row.pos.y, row.pos.z))
-        ) return false;
+        if (rows.stream().anyMatch(
+                row -> !MovingTileRegistry.instance.canRunOverBlock(w, row.pos.x, row.pos.y, row.pos.z)))
+            return false;
 
         for (BlockRow r : rows) TileMovingRow.setBlockForRow(w, r);
 
@@ -207,10 +206,13 @@ public class MovementManager2 {
         }
 
         if (!isClient) {
-            Map<Integer, Set<BlockStruct>> fin = map.entrySet()
-                .stream()
-                .map(entry -> new AbstractMap.SimpleEntry<Integer, Set<BlockStruct>>(entry.getKey(), (Set<BlockStruct>) entry.getValue().removeFinished()) {})
-                .filter(entry -> entry.getValue() != null).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+            Map<Integer, Set<BlockStruct>> fin = map.entrySet().stream()
+                    .map(
+                            entry -> new AbstractMap.SimpleEntry<Integer, Set<BlockStruct>>(
+                                    entry.getKey(),
+                                    (Set<BlockStruct>) entry.getValue().removeFinished()) {})
+                    .filter(entry -> entry.getValue() != null)
+                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
             for (Map.Entry<Integer, Set<BlockStruct>> entry : fin.entrySet()) {
                 Integer dim = entry.getKey();
@@ -234,7 +236,9 @@ public class MovementManager2 {
     // TODO: Scala moment
     public static void clientCycleMove(World w, BlockStruct struct) {
         getWorldStructs(w).removeStruct(struct);
-        for (BlockRow bs : struct.rows){bs.pushEntities(w, 1.0);}
+        for (BlockRow bs : struct.rows) {
+            bs.pushEntities(w, 1.0);
+        }
         cycleMove(w, struct);
     }
 
@@ -244,20 +248,14 @@ public class MovementManager2 {
         struct.postMove(w);
         struct.endMove(w);
 
-        Utils.rescheduleTicks(
-            w,
-            struct.preMoveBlocks,
-            struct.allBlocks,
-            struct.moveDir()
-        );
+        Utils.rescheduleTicks(w, struct.preMoveBlocks, struct.allBlocks, struct.moveDir());
 
         // TODO: Scala moment
         Set<BlockCoord> changes = new HashSet<>();
         for (BlockRow r : struct.rows) {
             r.cacheChanges(w, changes);
         }
-        for (BlockCoord bc : changes)
-            w.notifyBlockOfNeighborChange(bc.x, bc.y, bc.z, Blocks.air);
+        for (BlockCoord bc : changes) w.notifyBlockOfNeighborChange(bc.x, bc.y, bc.z, Blocks.air);
 
         Utils.rerenderBlocks(w, struct.preMoveBlocks);
     }

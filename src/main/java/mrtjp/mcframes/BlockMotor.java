@@ -1,12 +1,12 @@
 package mrtjp.mcframes;
 
-import mrtjp.core.block.InstancedBlock;
-import mrtjp.core.block.InstancedBlockTile;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.util.ForgeDirection;
+
+import mrtjp.core.block.InstancedBlock;
 
 public class BlockMotor extends InstancedBlock {
 
@@ -20,13 +20,7 @@ public class BlockMotor extends InstancedBlock {
     }
 
     @Override
-    public boolean isSideSolid(
-        IBlockAccess world,
-        int x,
-        int y,
-        int z,
-        ForgeDirection side
-    ) {
+    public boolean isSideSolid(IBlockAccess world, int x, int y, int z, ForgeDirection side) {
         return true;
     }
 

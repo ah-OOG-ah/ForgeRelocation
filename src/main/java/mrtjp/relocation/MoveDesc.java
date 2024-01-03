@@ -1,8 +1,8 @@
 package mrtjp.relocation;
 
-import mrtjp.relocation.api.IMovementDescriptor;
-
 import java.lang.ref.WeakReference;
+
+import mrtjp.relocation.api.IMovementDescriptor;
 
 public class MoveDesc implements IMovementDescriptor {
 

@@ -1,7 +1,8 @@
 package mrtjp.mcframes.handler;
 
-import mrtjp.core.data.SpecialConfigGui;
 import net.minecraft.client.gui.GuiScreen;
+
+import mrtjp.core.data.SpecialConfigGui;
 
 public class MCFramesConfigGui extends SpecialConfigGui {
 

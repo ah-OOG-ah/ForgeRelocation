@@ -1,33 +1,26 @@
 package mrtjp.mcframes;
 
-
-import codechicken.lib.vec.BlockCoord;
-import com.google.common.collect.Sets;
-import mrtjp.core.world.JWorldLib;
-import mrtjp.core.world.WorldLib;
-import mrtjp.mcframes.api.IFrame;
-import mrtjp.mcframes.api.IFrameInteraction;
-import net.minecraft.block.Block;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
-import scala.Tuple2;
-
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import static net.minecraft.block.BlockPistonMoving.getTileEntity;
+import net.minecraft.block.Block;
+import net.minecraft.world.World;
+
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
+
+import codechicken.lib.vec.BlockCoord;
+import mrtjp.core.world.JWorldLib;
+import mrtjp.core.world.WorldLib;
+import mrtjp.mcframes.api.IFrame;
+import mrtjp.mcframes.api.IFrameInteraction;
 
 public class StickRegistry {
 
@@ -56,8 +49,7 @@ public class StickRegistry {
             return new ImmutablePair<>(Block.getBlockFromName(fixName(m.group(1))), Integer.parseInt(m.group(2)));
 
         m = rName.matcher(b);
-        if (m.find())
-            return new ImmutablePair<>(Block.getBlockFromName(fixName(m.group(1))), -1);
+        if (m.find()) return new ImmutablePair<>(Block.getBlockFromName(fixName(m.group(1))), -1);
 
         throw new RuntimeException("Illegal set part: " + b);
     }
@@ -71,8 +63,7 @@ public class StickRegistry {
     }
 
     public List<String> parseAndAddLatchSets(List<String> kv) {
-        parseKV(kv).forEach(b ->
-            addLatchSet(parseBlockMeta(b.getLeft()), parseBlockMeta(b.getRight())));
+        parseKV(kv).forEach(b -> addLatchSet(parseBlockMeta(b.getLeft()), parseBlockMeta(b.getRight())));
 
         List<String> ret = new ArrayList<>();
         latchMap.forEach((block, pairs) -> {
@@ -99,7 +90,7 @@ public class StickRegistry {
 
     private IFrame getFrame(World w, BlockCoord pos) {
         Block b = WorldLib.getBlock(w, pos);
-        if (b instanceof  IFrame) return (IFrame) b;
+        if (b instanceof IFrame) return (IFrame) b;
         IFrame te = WorldLib.getTileEntity(w, pos, IFrame.class);
         if (te != null) return te;
         return interactionList.stream().filter(v -> v.canInteract(w, pos.x, pos.y, pos.z)).findAny().orElse(null);

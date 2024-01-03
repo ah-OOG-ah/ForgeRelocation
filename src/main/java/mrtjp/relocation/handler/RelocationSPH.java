@@ -1,17 +1,5 @@
 package mrtjp.relocation.handler;
 
-import codechicken.lib.data.MCDataOutputWrapper;
-import codechicken.lib.packet.PacketCustom;
-import com.google.common.collect.Multimap;
-import com.google.common.collect.MultimapBuilder;
-import mrtjp.relocation.MovementManager2;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.network.play.INetHandlerPlayServer;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.world.ChunkCoordIntPair;
-import net.minecraft.world.World;
-
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.util.Collection;
@@ -23,6 +11,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.network.play.INetHandlerPlayServer;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.world.ChunkCoordIntPair;
+import net.minecraft.world.World;
+
+import com.google.common.collect.Multimap;
+import com.google.common.collect.MultimapBuilder;
+
+import codechicken.lib.data.MCDataOutputWrapper;
+import codechicken.lib.packet.PacketCustom;
+import mrtjp.relocation.MovementManager2;
 
 public class RelocationSPH extends RelocationPH implements PacketCustom.IServerPacketHandler {
 
@@ -43,11 +45,8 @@ public class RelocationSPH extends RelocationPH implements PacketCustom.IServerP
     }
 
     @Override
-    public void handlePacket(
-        PacketCustom packetCustom,
-        EntityPlayerMP entityPlayerMP,
-        INetHandlerPlayServer iNetHandlerPlayServer
-    ) {}
+    public void handlePacket(PacketCustom packetCustom, EntityPlayerMP entityPlayerMP,
+            INetHandlerPlayServer iNetHandlerPlayServer) {}
 
     private Map<World, Map<Set<ChunkCoordIntPair>, MCByteStream>> updateMap = new HashMap<>();
     private Multimap<Integer, ChunkCoordIntPair> chunkWatchers = MultimapBuilder.hashKeys().arrayListValues().build();
@@ -96,7 +95,9 @@ public class RelocationSPH extends RelocationPH implements PacketCustom.IServerP
                     Collection<ChunkCoordIntPair> chunks = chunkWatchers.get(p.getEntityId());
                     PacketCustom packet = new PacketCustom(channel, 2).compress();
                     boolean send = false;
-                    Set<Map.Entry<Set<ChunkCoordIntPair>, MCByteStream>> toIter = pairs.entrySet().stream().filter(pair -> pair.getKey().stream().anyMatch(chunks::contains)).collect(Collectors.toSet());
+                    Set<Map.Entry<Set<ChunkCoordIntPair>, MCByteStream>> toIter = pairs.entrySet().stream()
+                            .filter(pair -> pair.getKey().stream().anyMatch(chunks::contains))
+                            .collect(Collectors.toSet());
 
                     for (Map.Entry<Set<ChunkCoordIntPair>, MCByteStream> pair : toIter) {
                         MCByteStream stream = pair.getValue();
@@ -124,12 +125,10 @@ public class RelocationSPH extends RelocationPH implements PacketCustom.IServerP
         newWatchers.clear();
     }
 
-    private PacketCustom getDescPacket(
-        World world,
-        Set<ChunkCoordIntPair> chunks
-    ) {
+    private PacketCustom getDescPacket(World world, Set<ChunkCoordIntPair> chunks) {
         PacketCustom packet = new PacketCustom(channel, 1);
-        if (MovementManager2.writeDesc(world, chunks, packet)) return packet; else return null;
+        if (MovementManager2.writeDesc(world, chunks, packet)) return packet;
+        else return null;
     }
 
     public void forceSendData() {
@@ -141,23 +140,16 @@ public class RelocationSPH extends RelocationPH implements PacketCustom.IServerP
     }
 
     public MCByteStream getStream(World world, Set<ChunkCoordIntPair> chunks, int key) {
-        return updateMap
-            .computeIfAbsent(
-                world, w -> {
-                    if (w.isRemote) {
-                        throw new IllegalArgumentException(
-                            "Cannot use RelocationSPH on a client world"
-                        );
-                    }
-                    return new HashMap<>();
-                }
-        ).computeIfAbsent(
-            chunks, cs -> {
-                MCByteStream s = new MCByteStream(new ByteArrayOutputStream());
-                s.writeByte(key);
-                return s;
+        return updateMap.computeIfAbsent(world, w -> {
+            if (w.isRemote) {
+                throw new IllegalArgumentException("Cannot use RelocationSPH on a client world");
             }
-        );
+            return new HashMap<>();
+        }).computeIfAbsent(chunks, cs -> {
+            MCByteStream s = new MCByteStream(new ByteArrayOutputStream());
+            s.writeByte(key);
+            return s;
+        });
     }
 
 }

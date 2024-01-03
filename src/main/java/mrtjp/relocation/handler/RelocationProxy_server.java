@@ -1,5 +1,7 @@
 package mrtjp.relocation.handler;
 
+import net.minecraftforge.common.MinecraftForge;
+
 import codechicken.lib.packet.PacketCustom;
 import cpw.mods.fml.common.FMLCommonHandler;
 import mrtjp.relocation.BlockMovingRow;
@@ -8,7 +10,6 @@ import mrtjp.relocation.RelocationEventHandler;
 import mrtjp.relocation.SaveLoadTileMover;
 import mrtjp.relocation.StaticTileMover;
 import mrtjp.relocation.api.RelocationAPI;
-import net.minecraftforge.common.MinecraftForge;
 
 public class RelocationProxy_server {
 
@@ -20,22 +21,19 @@ public class RelocationProxy_server {
         RelocationMod.instance.blockMovingRow = new BlockMovingRow();
 
         API.registerTileMover(
-            "saveload",
-            "Saves the tile and then reloads it in the next position. Reliable but CPU intensive.",
-            new SaveLoadTileMover()
-        );
+                "saveload",
+                "Saves the tile and then reloads it in the next position. Reliable but CPU intensive.",
+                new SaveLoadTileMover());
 
         API.registerTileMover(
-            "coordpush",
-            "Physically changes the location of tiles. Works if tiles do not cache their position.",
-            new CoordPushTileMover()
-        );
+                "coordpush",
+                "Physically changes the location of tiles. Works if tiles do not cache their position.",
+                new CoordPushTileMover());
 
         API.registerTileMover(
-            "static",
-            "Setting this disables movement for the specified block.",
-            new StaticTileMover()
-        );
+                "static",
+                "Setting this disables movement for the specified block.",
+                new StaticTileMover());
 
         API.registerPreferredMover("default", "saveload");
         API.registerPreferredMover("mod:minecraft", "coordpush");

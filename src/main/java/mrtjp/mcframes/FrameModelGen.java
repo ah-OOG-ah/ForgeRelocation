@@ -1,18 +1,18 @@
 package mrtjp.mcframes;
 
+import static codechicken.lib.render.CCModel.combine;
+import static codechicken.lib.render.CCModel.quadModel;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import codechicken.lib.lighting.LightModel;
 import codechicken.lib.render.CCModel;
 import codechicken.lib.render.Vertex5;
 import codechicken.lib.vec.Rotation;
 import codechicken.lib.vec.Translation;
 import codechicken.lib.vec.Vector3;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import static codechicken.lib.render.CCModel.combine;
-import static codechicken.lib.render.CCModel.quadModel;
 
 public class FrameModelGen {
 
@@ -31,8 +31,7 @@ public class FrameModelGen {
         List<CCModel> b = new ArrayList<>();
         b.add(box);
         for (int s = 0; s < 6; ++s) {
-            if ((mask & 1 << s) == 0)
-                b.add(generateSided(m.copy(), s));
+            if ((mask & 1 << s) == 0) b.add(generateSided(m.copy(), s));
         }
 
         return finishModel(combine(b));
@@ -52,11 +51,10 @@ public class FrameModelGen {
 
     public static CCModel generateQuartRotated(CCModel m) {
         return combine(
-            Arrays.asList(
-                m,
-                m.copy().apply(Rotation.quarterRotations[1].at(Vector3.center).with(new Translation(0, 0.01, 0)))
-            )
-        );
+                Arrays.asList(
+                        m,
+                        m.copy().apply(
+                                Rotation.quarterRotations[1].at(Vector3.center).with(new Translation(0, 0.01, 0)))));
     }
 
     public static CCModel generateEightRotated(CCModel m) {

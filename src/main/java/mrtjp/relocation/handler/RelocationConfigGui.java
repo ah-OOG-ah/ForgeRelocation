@@ -1,8 +1,8 @@
 package mrtjp.relocation.handler;
 
-import mrtjp.core.data.SpecialConfigGui;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraftforge.common.config.Configuration;
+
+import mrtjp.core.data.SpecialConfigGui;
 
 public class RelocationConfigGui extends SpecialConfigGui {
 

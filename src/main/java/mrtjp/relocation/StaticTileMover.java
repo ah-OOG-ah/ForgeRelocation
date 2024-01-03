@@ -1,9 +1,11 @@
 package mrtjp.relocation;
 
-import mrtjp.relocation.api.ITileMover;
 import net.minecraft.world.World;
 
+import mrtjp.relocation.api.ITileMover;
+
 public class StaticTileMover implements ITileMover {
+
     @Override
     public boolean canMove(World w, int x, int y, int z) {
         return false;

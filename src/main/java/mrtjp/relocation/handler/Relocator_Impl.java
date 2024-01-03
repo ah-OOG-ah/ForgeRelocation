@@ -1,18 +1,16 @@
 package mrtjp.relocation.handler;
 
+import java.util.ArrayDeque;
+import java.util.Queue;
+import java.util.Set;
+
+import net.minecraft.world.World;
+
 import codechicken.lib.vec.BlockCoord;
 import mrtjp.relocation.MovementManager2;
 import mrtjp.relocation.api.BlockPos;
 import mrtjp.relocation.api.IMovementCallback;
 import mrtjp.relocation.api.Relocator;
-import net.minecraft.block.Block;
-import net.minecraft.world.World;
-import scala.collection.JavaConverters;
-
-import java.util.ArrayDeque;
-import java.util.Queue;
-import java.util.Set;
-import java.util.Stack;
 
 public class Relocator_Impl extends Relocator {
 
@@ -22,8 +20,7 @@ public class Relocator_Impl extends Relocator {
     public Queue<RelocationRun> tempStack = new ArrayDeque<>();
 
     private void assertState() {
-        if (mainStack.isEmpty())
-            throw new IllegalStateException("Relocator stack is empty.");
+        if (mainStack.isEmpty()) throw new IllegalStateException("Relocator stack is empty.");
     }
 
     @Override
@@ -68,8 +65,7 @@ public class Relocator_Impl extends Relocator {
     public void setCallback(IMovementCallback callback) {
         assertState();
         RelocationRun top = mainStack.peek();
-        if (top.callback != null)
-            throw new IllegalStateException("Callback already set.");
+        if (top.callback != null) throw new IllegalStateException("Callback already set.");
         top.callback = callback;
     }
 
@@ -93,26 +89,12 @@ public class Relocator_Impl extends Relocator {
     public boolean execute() {
         assertState();
         RelocationRun top = mainStack.peek();
-        if (top.world == null)
-            throw new IllegalStateException("World must be set before move.");
-        if (top.world.isRemote)
-            throw new IllegalStateException(
-                "Movements cannot be executed client-side."
-            );
-        if (top.dir == -1)
-            throw new IllegalStateException("Direction must be set before move.");
-        if (top.speed <= 0)
-            throw new IllegalStateException("Speed must be greater than 0.");
-        if (top.speed >= 1)
-            throw new IllegalStateException("Speed must be less than 1.");
-        if (top.blocks.isEmpty())
-            throw new IllegalStateException("No blocks queued for move.");
-        return MovementManager2.tryStartMove(
-            top.world,
-            top.blocks,
-            top.dir,
-            top.speed,
-            top.callback
-        );
+        if (top.world == null) throw new IllegalStateException("World must be set before move.");
+        if (top.world.isRemote) throw new IllegalStateException("Movements cannot be executed client-side.");
+        if (top.dir == -1) throw new IllegalStateException("Direction must be set before move.");
+        if (top.speed <= 0) throw new IllegalStateException("Speed must be greater than 0.");
+        if (top.speed >= 1) throw new IllegalStateException("Speed must be less than 1.");
+        if (top.blocks.isEmpty()) throw new IllegalStateException("No blocks queued for move.");
+        return MovementManager2.tryStartMove(top.world, top.blocks, top.dir, top.speed, top.callback);
     }
 }

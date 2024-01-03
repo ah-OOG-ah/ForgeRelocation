@@ -1,28 +1,28 @@
 package mrtjp.mcframes;
 
-import codechicken.lib.data.MCDataInput;
-import codechicken.lib.data.MCDataOutput;
-import codechicken.lib.vec.BlockCoord;
-import codechicken.lib.vec.Rotation;
-import codechicken.lib.vec.Vector3;
-import mrtjp.core.block.InstancedBlockTile;
-import mrtjp.core.block.TTileOrient;
-import mrtjp.mcframes.api.IFrame;
-import mrtjp.mcframes.api.MCFramesAPI;
-import mrtjp.mcframes.api.StickResolver;
-import mrtjp.mcframes.handler.MCFramesMod;
-import mrtjp.relocation.api.BlockPos;
-import mrtjp.relocation.api.RelocationAPI;
-import mrtjp.relocation.api.Relocator;
+import java.util.Set;
+
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
-import java.util.Set;
+import codechicken.lib.data.MCDataInput;
+import codechicken.lib.data.MCDataOutput;
+import codechicken.lib.vec.BlockCoord;
+import codechicken.lib.vec.Rotation;
+import codechicken.lib.vec.Vector3;
+import mrtjp.core.block.TTileOrient;
+import mrtjp.mcframes.api.IFrame;
+import mrtjp.mcframes.api.MCFramesAPI;
+import mrtjp.mcframes.handler.MCFramesMod;
+import mrtjp.relocation.api.BlockPos;
+import mrtjp.relocation.api.RelocationAPI;
+import mrtjp.relocation.api.Relocator;
 
 public class TileMotor extends TTileOrient implements IFrame {
+
     byte orientation = 0;
 
     @Override
@@ -60,18 +60,11 @@ public class TileMotor extends TTileOrient implements IFrame {
     }
 
     public void sendOrientUpdate() {
-        if (!world().isRemote)
-            streamToSend(writeStream(2).writeByte(orientation)).sendToChunk();
+        if (!world().isRemote) streamToSend(writeStream(2).writeByte(orientation)).sendToChunk();
     }
 
     @Override
-    public void onBlockPlaced(
-        int side,
-        int meta,
-        EntityPlayer player,
-        ItemStack stack,
-        Vector3 hit
-    ) {
+    public void onBlockPlaced(int side, int meta, EntityPlayer player, ItemStack stack, Vector3 hit) {
         super.onBlockPlaced(side, meta, player, stack, hit);
         setSide(side ^ 1);
         setRotation(Rotation.getSidedRotation(player, side ^ 1));
@@ -90,7 +83,7 @@ public class TileMotor extends TTileOrient implements IFrame {
     @Override
     public void onOrientChanged(int oldOrient) {
         // sus
-        //super.onOrientChanged(oldOrient);
+        // super.onOrientChanged(oldOrient);
         sendOrientUpdate();
     }
 
@@ -119,12 +112,10 @@ public class TileMotor extends TTileOrient implements IFrame {
             BlockCoord pos = position().offset(side() ^ 1);
             if (world().isAirBlock(pos.x, pos.y, pos.z)) return;
 
-            if (
-                !RelocationAPI.instance.isMoving(world(), pos.x, pos.y, pos.z) &&
-                    !RelocationAPI.instance.isMoving(world(), xCoord, yCoord, zCoord)
-            ) {
+            if (!RelocationAPI.instance.isMoving(world(), pos.x, pos.y, pos.z)
+                    && !RelocationAPI.instance.isMoving(world(), xCoord, yCoord, zCoord)) {
                 Set<BlockPos> blocks = MCFramesAPI.instance.getStickResolver()
-                    .getStructure(world(), pos.x, pos.y, pos.z, new BlockPos(xCoord, yCoord, zCoord));
+                        .getStructure(world(), pos.x, pos.y, pos.z, new BlockPos(xCoord, yCoord, zCoord));
 
                 Relocator r = RelocationAPI.instance.getRelocator();
                 r.push();

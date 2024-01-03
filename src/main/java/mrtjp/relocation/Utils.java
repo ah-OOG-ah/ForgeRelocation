@@ -1,14 +1,5 @@
 package mrtjp.relocation;
 
-import codechicken.lib.vec.BlockCoord;
-import cpw.mods.fml.common.ObfuscationReflectionHelper;
-import net.minecraft.client.Minecraft;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.NextTickListEntry;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
-import net.minecraft.world.chunk.Chunk;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -17,45 +8,49 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.NextTickListEntry;
+import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
+import net.minecraft.world.chunk.Chunk;
+
+import codechicken.lib.vec.BlockCoord;
+import cpw.mods.fml.common.ObfuscationReflectionHelper;
+
 public class Utils {
 
-    public static void rescheduleTicks(
-        World world,
-        Set<BlockCoord> blocks,
-        Set<BlockCoord> allBlocks,
-        int dir
-    ) {
+    public static void rescheduleTicks(World world, Set<BlockCoord> blocks, Set<BlockCoord> allBlocks, int dir) {
         if (world instanceof WorldServer) {
             Set<NextTickListEntry> hash = ObfuscationReflectionHelper.getPrivateValue(
-                WorldServer.class,
-                (WorldServer) world,
-                "field_73064_N",
-                "pendingTickListEntriesHashSet"
-            );
+                    WorldServer.class,
+                    (WorldServer) world,
+                    "field_73064_N",
+                    "pendingTickListEntriesHashSet");
 
             Set<NextTickListEntry> tree = ObfuscationReflectionHelper.getPrivateValue(
-                WorldServer.class,
-                (WorldServer) world,
-                "field_73065_O",
-                "pendingTickListEntriesTreeSet"
-            );
+                    WorldServer.class,
+                    (WorldServer) world,
+                    "field_73065_O",
+                    "pendingTickListEntriesTreeSet");
 
             List<NextTickListEntry> list = ObfuscationReflectionHelper.getPrivateValue(
-                WorldServer.class,
-                (WorldServer) world,
-                "field_94579_S",
-                "pendingTickListEntriesThisTick"
-            );
+                    WorldServer.class,
+                    (WorldServer) world,
+                    "field_94579_S",
+                    "pendingTickListEntriesThisTick");
 
             boolean isOptifine = world.getClass().getName() == "WorldServerOF";
 
             Set<Chunk> chunks = allBlocks.stream().map(b -> world.getChunkFromChunkCoords(b.x, b.y))
-                .filter(Objects::nonNull).collect(Collectors.toSet());
+                    .filter(Objects::nonNull).collect(Collectors.toSet());
 
-            Set<NextTickListEntry> scheduledTicks = new HashSet<>(chunks.stream().map(c -> world.getPendingBlockUpdates(c, isOptifine)).filter(Objects::nonNull).reduce((s, s2) -> {
-                s.addAll(s2);
-                return s;
-            }).orElseGet(ArrayList::new));
+            Set<NextTickListEntry> scheduledTicks = new HashSet<>(
+                    chunks.stream().map(c -> world.getPendingBlockUpdates(c, isOptifine)).filter(Objects::nonNull)
+                            .reduce((s, s2) -> {
+                                s.addAll(s2);
+                                return s;
+                            }).orElseGet(ArrayList::new));
 
             if (isOptifine) {
                 for (NextTickListEntry tick : scheduledTicks) {

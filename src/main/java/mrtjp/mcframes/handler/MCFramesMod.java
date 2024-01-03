@@ -9,14 +9,13 @@ import mrtjp.mcframes.BlockMotor;
 import mrtjp.mcframes.api.MCFramesAPI;
 
 @Mod(
-    modid = MCFramesMod.modID,
-    useMetadata = true,
-    guiFactory = "mrtjp.mcframes.handler.GuiConfigFactory",
-    acceptedMinecraftVersions = "[1.7.10]",
-    dependencies = "required-after:MrTJPCoreMod",
-    name = MCFramesMod.modName,
-    version = MCFramesMod.version
-)
+        modid = MCFramesMod.modID,
+        useMetadata = true,
+        guiFactory = "mrtjp.mcframes.handler.GuiConfigFactory",
+        acceptedMinecraftVersions = "[1.7.10]",
+        dependencies = "required-after:MrTJPCoreMod",
+        name = MCFramesMod.modName,
+        version = MCFramesMod.version)
 public class MCFramesMod {
 
     static {
@@ -28,8 +27,6 @@ public class MCFramesMod {
     public static final String modID = "MCFrames";
     public static final String modName = "MCFrames";
     public static final String version = "GRADLETOKEN_VERSION";
-
-
 
     public BlockFrame blockFrame;
     public BlockMotor blockMotor;

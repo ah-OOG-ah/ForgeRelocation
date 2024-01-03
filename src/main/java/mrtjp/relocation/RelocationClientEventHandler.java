@@ -1,8 +1,9 @@
 package mrtjp.relocation;
 
+import net.minecraftforge.client.event.RenderWorldLastEvent;
+
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
-import net.minecraftforge.client.event.RenderWorldLastEvent;
 
 public class RelocationClientEventHandler {
 
@@ -10,8 +11,7 @@ public class RelocationClientEventHandler {
 
     @SubscribeEvent
     public void onRenderTick(TickEvent.RenderTickEvent e) {
-        if (e.phase == TickEvent.Phase.START)
-            MovingRenderer.instance.onPreRenderTick(e.renderTickTime);
+        if (e.phase == TickEvent.Phase.START) MovingRenderer.instance.onPreRenderTick(e.renderTickTime);
         else MovingRenderer.instance.onPostRenderTick();
     }
 
@@ -22,7 +22,6 @@ public class RelocationClientEventHandler {
 
     @SubscribeEvent
     public void clientTick(TickEvent.ClientTickEvent event) {
-        if (event.phase == TickEvent.Phase.END)
-            MovementManager2.onTick(true);
+        if (event.phase == TickEvent.Phase.END) MovementManager2.onTick(true);
     }
 }

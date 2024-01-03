@@ -1,12 +1,14 @@
 package mrtjp.relocation.handler;
 
+import net.minecraft.world.World;
+
+import org.apache.commons.lang3.tuple.ImmutablePair;
+
 import mrtjp.relocation.MovementManager2;
 import mrtjp.relocation.MovingTileRegistry;
 import mrtjp.relocation.api.ITileMover;
 import mrtjp.relocation.api.RelocationAPI;
 import mrtjp.relocation.api.Relocator;
-import net.minecraft.world.World;
-import org.apache.commons.lang3.tuple.ImmutablePair;
 
 public class RelocationAPI_Impl extends RelocationAPI {
 
@@ -15,11 +17,7 @@ public class RelocationAPI_Impl extends RelocationAPI {
     public boolean isPreInit = true;
 
     @Override
-    public void registerTileMover(
-        String name,
-        String desc,
-        ITileMover handler
-    ) {
+    public void registerTileMover(String name, String desc, ITileMover handler) {
         assert isPreInit;
         MovingTileRegistry.instance.registerTileMover(name, desc, handler);
     }

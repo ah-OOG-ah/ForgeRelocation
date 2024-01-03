@@ -1,16 +1,15 @@
 package mrtjp.relocation;
 
-import codechicken.lib.vec.BlockCoord;
-import mrtjp.core.world.WorldLib;
-import mrtjp.relocation.api.ITileMover;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import scala.Tuple3;
 
-import java.util.function.Supplier;
+import codechicken.lib.vec.BlockCoord;
+import mrtjp.core.world.WorldLib;
+import mrtjp.relocation.api.ITileMover;
+import scala.Tuple3;
 
 public class SaveLoadTileMover implements ITileMover {
 
@@ -44,7 +43,7 @@ public class SaveLoadTileMover implements ITileMover {
         WorldLib.uncheckedSetBlock(w, pos.x, pos.y, pos.z, b, meta);
         if (tag != null) {
             TileEntity te2 = TileEntity.createAndLoadEntity(tag);
-            if (te2 instanceof TileEntity){
+            if (te2 instanceof TileEntity) {
                 w.getChunkFromBlockCoords(pos.x, pos.z).addTileEntity(te);
             }
         }

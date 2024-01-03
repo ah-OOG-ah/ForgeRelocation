@@ -1,21 +1,21 @@
 package mrtjp.mcframes.handler;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import net.minecraft.block.Block;
+import net.minecraft.world.World;
+
 import codechicken.lib.vec.BlockCoord;
 import mrtjp.core.world.WorldLib;
 import mrtjp.mcframes.StickRegistry;
 import mrtjp.mcframes.api.StickResolver;
 import mrtjp.relocation.api.BlockPos;
 import mrtjp.relocation.api.RelocationAPI;
-import net.minecraft.block.Block;
-import net.minecraft.world.World;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 public class StickResolver_Impl extends StickResolver {
 
@@ -26,13 +26,7 @@ public class StickResolver_Impl extends StickResolver {
     private Set<BlockCoord> excl = null;
 
     @Override
-    public Set<BlockPos> getStructure(
-        World w,
-        int x,
-        int y,
-        int z,
-        BlockPos... ex
-    ) {
+    public Set<BlockPos> getStructure(World w, int x, int y, int z, BlockPos... ex) {
         world = w;
         start = new BlockCoord(x, y, z);
         excl = Arrays.stream(ex).map(b -> new BlockCoord(b.x, b.y, b.z)).collect(Collectors.toSet());
@@ -45,15 +39,11 @@ public class StickResolver_Impl extends StickResolver {
         return result.stream().map(b -> new BlockPos(b.x, b.y, b.z)).collect(Collectors.toSet());
     }
 
-
     private Set<BlockCoord> iterate(List<BlockCoord> open) {
         return iterate(open, new HashSet<>());
     }
 
-    private Set<BlockCoord> iterate(
-        List<BlockCoord> open,
-        Set<BlockCoord> closed
-    ) {
+    private Set<BlockCoord> iterate(List<BlockCoord> open, Set<BlockCoord> closed) {
 
         if (open.isEmpty()) {
             return closed;
@@ -68,7 +58,8 @@ public class StickResolver_Impl extends StickResolver {
                 if (StickRegistry.instance.resolveStick(world, next, s)) {
                     BlockCoord to = next.copy().offset(s);
                     if (!excl.contains(to) && !closed.contains(to) && !open.contains(to))
-                        if (!world.isAirBlock(to.x, to.y, to.z) && !RelocationAPI.instance.isMoving(world, to.x, to.y, to.z)
+                        if (!world.isAirBlock(to.x, to.y, to.z)
+                                && !RelocationAPI.instance.isMoving(world, to.x, to.y, to.z)
                         /* && MovingTileRegistry.canMove(world, to.x, to.y, to.z) */)
                             // Dont ignore non-movables, have them halt movement.
                             toCheck.add(to);

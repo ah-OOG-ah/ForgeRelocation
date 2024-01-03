@@ -1,20 +1,21 @@
 package mrtjp.relocation;
 
-import codechicken.lib.vec.BlockCoord;
-import mrtjp.core.math.JMathLib;
-import mrtjp.core.math.MathLib;
-import mrtjp.core.world.WorldLib;
-import net.minecraft.init.Blocks;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
+import static java.lang.Math.max;
+import static java.lang.Math.min;
 
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static java.lang.Math.max;
-import static java.lang.Math.min;
+import net.minecraft.init.Blocks;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
+
+import codechicken.lib.vec.BlockCoord;
+import mrtjp.core.math.JMathLib;
+import mrtjp.core.math.MathLib;
+import mrtjp.core.world.WorldLib;
 
 public class BlockRow {
 
@@ -30,8 +31,8 @@ public class BlockRow {
         this.moveDir = moveDir;
         this.size = size;
 
-        allBlocks = IntStream.rangeClosed(0, size).boxed()
-            .map(i -> pos.copy().offset(moveDir ^ 1, i)).collect(Collectors.toList());
+        allBlocks = IntStream.rangeClosed(0, size).boxed().map(i -> pos.copy().offset(moveDir ^ 1, i))
+                .collect(Collectors.toList());
 
         // Not sure about these - they might need to be swapped
         preMoveBlocks = allBlocks.stream().skip(1).collect(Collectors.toList());
@@ -43,7 +44,8 @@ public class BlockRow {
         if (JMathLib.normal(x, y, z, moveDir).equals(JMathLib.normal(pos, moveDir))) {
             int b1 = MathLib.basis(pos, moveDir);
             int b2 = b1 + size * MathLib.shift(moveDir ^ 1);
-            return IntStream.rangeClosed(min(b1, b2), max(b1, b2)).anyMatch(value -> value == MathLib.basis(x, y, z, moveDir));
+            return IntStream.rangeClosed(min(b1, b2), max(b1, b2))
+                    .anyMatch(value -> value == MathLib.basis(x, y, z, moveDir));
         } else return false;
     }
 
@@ -58,14 +60,7 @@ public class BlockRow {
         if (pos.y < 0 || pos.y >= 256) return;
 
         w.removeTileEntity(pos.x, pos.y, pos.z);
-        WorldLib.uncheckedSetBlock(
-            w,
-            pos.x,
-            pos.y,
-            pos.z,
-            Blocks.air,
-            0
-        ); // Remove movement block
+        WorldLib.uncheckedSetBlock(w, pos.x, pos.y, pos.z, Blocks.air, 0); // Remove movement block
 
         for (BlockCoord b : preMoveBlocks) {
             MovingTileRegistry.instance.move(w, b.x, b.y, b.z, moveDir);

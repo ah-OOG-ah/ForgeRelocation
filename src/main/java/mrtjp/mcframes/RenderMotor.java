@@ -1,14 +1,16 @@
 package mrtjp.mcframes;
 
+import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.util.IIcon;
+import net.minecraft.world.IBlockAccess;
+
+import org.apache.commons.lang3.tuple.ImmutableTriple;
+import org.apache.commons.lang3.tuple.Triple;
+
 import codechicken.lib.render.uv.MultiIconTransformation;
 import codechicken.lib.render.uv.UVTransformation;
 import mrtjp.core.render.TCubeMapRender;
 import mrtjp.core.world.WorldLib;
-import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.util.IIcon;
-import net.minecraft.world.IBlockAccess;
-import org.apache.commons.lang3.tuple.ImmutableTriple;
-import org.apache.commons.lang3.tuple.Triple;
 
 public class RenderMotor implements TCubeMapRender {
 
@@ -41,14 +43,19 @@ public class RenderMotor implements TCubeMapRender {
     @Override
     public IIcon getIcon(int s, int meta) {
         switch (s) {
-            case 0: return bottom;
-            case 1: return top;
+            case 0:
+                return bottom;
+            case 1:
+                return top;
             case 2:
             case 3:
                 return side;
-            case 4: return sidew;
-            case 5: return sidee;
-            default: return null;
+            case 4:
+                return sidew;
+            case 5:
+                return sidee;
+            default:
+                return null;
         }
     }
 
