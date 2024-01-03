@@ -12,11 +12,11 @@ import mrtjp.relocation.core.FRelocationCore;
 
 public enum Mixins {
 
-    /*VANISH_MOVING_BLOCKS(new Builder("Change the render type of moving blocks to invisible")
+    VANISH_MOVING_BLOCKS(new Builder("Change the render type of moving blocks to invisible")
             .addTargetedMod(TargetedMod.VANILLA).setSide(Side.CLIENT).setPhase(Phase.EARLY).setApplyIf(() -> true)
             .addMixinClasses("MixinRenderBlocks")),
     RENDER_MOVING_TES(new Builder("Renders moving TEs").addTargetedMod(TargetedMod.VANILLA).setSide(Side.CLIENT)
-            .setPhase(Phase.EARLY).setApplyIf(() -> true).addMixinClasses("MixinTileEntityRendererDispatcher"))*/;
+            .setPhase(Phase.EARLY).setApplyIf(() -> true).addMixinClasses("MixinTileEntityRendererDispatcher"));
 
     private final List<String> mixinClasses;
     private final Supplier<Boolean> applyIf;
