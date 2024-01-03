@@ -30,22 +30,23 @@ public class MovingRenderer {
     private float frame = 0;
     private RenderBlocks renderBlocks = null;
 
-    private Minecraft mc = Minecraft.getMinecraft();
-    private World world = mc.theWorld;
     private Tessellator tes = Tessellator.instance;
 
     private void render(int x, int y, int z, Vector3 rpos) {
+
+        Minecraft mc = Minecraft.getMinecraft();
+
         int oldOcclusion = mc.gameSettings.ambientOcclusion;
         mc.gameSettings.ambientOcclusion = 0;
 
-        Block block = world.getBlock(x, y, z);
+        Block block = mc.theWorld.getBlock(x, y, z);
         if (block == null) return;
 
         TextureManager engine = TileEntityRendererDispatcher.instance.field_147553_e;
         if (engine != null) engine.bindTexture(TextureMap.locationBlocksTexture);
         mc.entityRenderer.enableLightmap(frame);
 
-        int light = world.getLightBrightnessForSkyBlocks(x, y, z, block.getLightValue(world, x, y, z));
+        int light = mc.theWorld.getLightBrightnessForSkyBlocks(x, y, z, block.getLightValue(mc.theWorld, x, y, z));
         int l1 = light % 65536;
         int l2 = light / 65536;
 
@@ -80,13 +81,14 @@ public class MovingRenderer {
     }
 
     public void onRenderWorldEvent() {
-        if (oldWorld != world) {
-            oldWorld = world;
-            renderBlocks = new MovingRenderBlocks(new MovingWorld(world));
+        Minecraft mc = Minecraft.getMinecraft();
+        if (oldWorld != mc.theWorld) {
+            oldWorld = mc.theWorld;
+            renderBlocks = new MovingRenderBlocks(new MovingWorld(mc.theWorld));
             renderBlocks.renderAllFaces = true;
         }
 
-        for (BlockStruct s : MovementManager2.getWorldStructs(world).structs) {
+        for (BlockStruct s : MovementManager2.getWorldStructs(mc.theWorld).structs) {
             for (BlockCoord b : s.preMoveBlocks) {
                 render(b.x, b.y, b.z, renderPos(s, frame));
             }

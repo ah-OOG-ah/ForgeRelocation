@@ -15,6 +15,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.World;
@@ -53,15 +54,14 @@ public class MovementManager2 {
     }
 
     public static World getWorld(int dim, boolean isClient) {
-        if (!isClient) return DimensionManager.getWorld(dim);
-        else return getClientWorld(dim);
+        return (isClient) ? getClientWorld(dim) : DimensionManager.getWorld(dim);
     }
 
     @SideOnly(Side.CLIENT)
     private static World getClientWorld(int dim) {
-        World w = Minecraft.getMinecraft().theWorld;
-        if (w.provider.dimensionId == dim) return w;
-        else return null;
+        WorldClient w = Minecraft.getMinecraft().theWorld;
+        if (w == null) return null;
+        return (w.provider.dimensionId == dim) ? w : null;
     }
 
     public static boolean writeDesc(World w, Set<ChunkCoordIntPair> chunks, MCDataOutput out) {
@@ -191,7 +191,7 @@ public class MovementManager2 {
         for (Map.Entry<Integer, WorldStructs> entry : map.entrySet()) {
             WorldStructs ws = entry.getValue();
 
-            if (ws != null) {
+            if (ws != null && ws.nonEmpty()) {
                 Integer dim = entry.getKey();
                 ws.pushAll();
                 World world = getWorld(dim, isClient);
@@ -210,7 +210,7 @@ public class MovementManager2 {
                     .map(
                             entry -> new AbstractMap.SimpleEntry<Integer, Set<BlockStruct>>(
                                     entry.getKey(),
-                                    (Set<BlockStruct>) entry.getValue().removeFinished()) {})
+                                    entry.getValue().removeFinished()) {})
                     .filter(entry -> entry.getValue() != null)
                     .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 

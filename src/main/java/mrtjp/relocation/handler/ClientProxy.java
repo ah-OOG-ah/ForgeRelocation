@@ -6,9 +6,9 @@ import codechicken.lib.packet.PacketCustom;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import mrtjp.relocation.RelocationClientEventHandler;
+import mrtjp.relocation.events.ClientHandler;
 
-public class RelocationProxy_client extends RelocationProxy_server {
+public class ClientProxy extends CommonProxy {
 
     @SideOnly(Side.CLIENT)
     @Override
@@ -16,7 +16,7 @@ public class RelocationProxy_client extends RelocationProxy_server {
         super.postinit();
         PacketCustom.assignHandler(RelocationCPH.instance.channel, RelocationCPH.instance);
 
-        FMLCommonHandler.instance().bus().register(RelocationClientEventHandler.instance);
-        MinecraftForge.EVENT_BUS.register(RelocationClientEventHandler.instance);
+        FMLCommonHandler.instance().bus().register(ClientHandler.instance);
+        MinecraftForge.EVENT_BUS.register(ClientHandler.instance);
     }
 }

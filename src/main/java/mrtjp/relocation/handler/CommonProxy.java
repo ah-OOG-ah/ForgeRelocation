@@ -6,16 +6,14 @@ import codechicken.lib.packet.PacketCustom;
 import cpw.mods.fml.common.FMLCommonHandler;
 import mrtjp.relocation.BlockMovingRow;
 import mrtjp.relocation.CoordPushTileMover;
-import mrtjp.relocation.RelocationEventHandler;
+import mrtjp.relocation.events.ServerHandler;
 import mrtjp.relocation.SaveLoadTileMover;
 import mrtjp.relocation.StaticTileMover;
 import mrtjp.relocation.api.RelocationAPI;
 
-public class RelocationProxy_server {
+public class CommonProxy {
 
     private static final RelocationAPI API = RelocationAPI.instance;
-
-    public static RelocationProxy_server instance = new RelocationProxy_server();
 
     public void preinit() {
         RelocationMod.instance.blockMovingRow = new BlockMovingRow();
@@ -58,7 +56,7 @@ public class RelocationProxy_server {
     public void postinit() {
         PacketCustom.assignHandler(RelocationMod.modID, RelocationSPH.instance);
 
-        FMLCommonHandler.instance().bus().register(RelocationEventHandler.instance);
-        MinecraftForge.EVENT_BUS.register(RelocationEventHandler.instance);
+        FMLCommonHandler.instance().bus().register(ServerHandler.instance);
+        MinecraftForge.EVENT_BUS.register(ServerHandler.instance);
     }
 }

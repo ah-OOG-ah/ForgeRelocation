@@ -1,13 +1,15 @@
-package mrtjp.relocation;
+package mrtjp.relocation.events;
 
+import mrtjp.relocation.MovementManager2;
+import mrtjp.relocation.MovingRenderer;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 
-public class RelocationClientEventHandler {
+public class ClientHandler {
 
-    public static final RelocationClientEventHandler instance = new RelocationClientEventHandler();
+    public static final ClientHandler instance = new ClientHandler();
 
     @SubscribeEvent
     public void onRenderTick(TickEvent.RenderTickEvent e) {

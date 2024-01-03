@@ -1,5 +1,6 @@
-package mrtjp.relocation;
+package mrtjp.relocation.events;
 
+import mrtjp.relocation.MovementManager2;
 import net.minecraftforge.event.world.ChunkWatchEvent;
 import net.minecraftforge.event.world.WorldEvent;
 
@@ -7,9 +8,9 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import mrtjp.relocation.handler.RelocationSPH;
 
-public class RelocationEventHandler {
+public class ServerHandler {
 
-    public static final RelocationEventHandler instance = new RelocationEventHandler();
+    public static final ServerHandler instance = new ServerHandler();
 
     @SubscribeEvent
     public void worldUnload(WorldEvent.Unload event) {

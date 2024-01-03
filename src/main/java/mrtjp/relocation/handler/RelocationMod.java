@@ -1,8 +1,11 @@
 package mrtjp.relocation.handler;
 
+import cpw.mods.fml.common.SidedProxy;
+import cpw.mods.fml.relauncher.Side;
 import org.apache.logging.log4j.Logger;
 
 import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
@@ -18,13 +21,15 @@ import mrtjp.relocation.core.FRelocationCore;
         dependencies = "required-after:MrTJPCoreMod",
         name = RelocationMod.modName,
         version = RelocationMod.version)
-public class RelocationMod {
+public final class RelocationMod {
 
     static {
         RelocationAPI.instance = RelocationAPI_Impl.instance;
     }
 
     public static final RelocationMod instance = new RelocationMod();
+    @SidedProxy(clientSide = "mrtjp.relocation.handler.ClientProxy", serverSide = "mrtjp.relocation.handler.CommonProxy")
+    public static CommonProxy proxy;
 
     public static final String modID = "ForgeRelocation";
     public static final String modName = "ForgeRelocation";
@@ -35,18 +40,18 @@ public class RelocationMod {
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
-        RelocationProxy_server.instance.preinit();
+        proxy.preinit();
     }
 
-    @Mod.EventHandler
-    public void init(FMLInitializationEvent event) {
+    @EventHandler
+    public static void init(FMLInitializationEvent event) {
         RelocationAPI_Impl.instance.isPreInit = false;
         RelocationConfig.instance.loadConfig();
-        RelocationProxy_server.instance.init();
+        proxy.init();
     }
 
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event) {
-        RelocationProxy_server.instance.postinit();
+        proxy.postinit();
     }
 }
