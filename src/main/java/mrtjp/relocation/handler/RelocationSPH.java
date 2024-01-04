@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.google.common.collect.SetMultimap;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.play.INetHandlerPlayServer;
@@ -48,9 +49,9 @@ public class RelocationSPH extends RelocationPH implements PacketCustom.IServerP
     public void handlePacket(PacketCustom packetCustom, EntityPlayerMP entityPlayerMP,
             INetHandlerPlayServer iNetHandlerPlayServer) {}
 
-    private Map<World, Map<Set<ChunkCoordIntPair>, MCByteStream>> updateMap = new HashMap<>();
-    private Multimap<Integer, ChunkCoordIntPair> chunkWatchers = MultimapBuilder.hashKeys().arrayListValues().build();
-    private Map<Integer, LinkedList<ChunkCoordIntPair>> newWatchers = new HashMap<>();
+    private final Map<World, Map<Set<ChunkCoordIntPair>, MCByteStream>> updateMap = new HashMap<>();
+    private final SetMultimap<Integer, ChunkCoordIntPair> chunkWatchers = MultimapBuilder.hashKeys().hashSetValues().build();
+    private final Map<Integer, LinkedList<ChunkCoordIntPair>> newWatchers = new HashMap<>();
 
     public void onTickEnd() {
         List<EntityPlayerMP> players = getServerPlayers();
@@ -62,7 +63,7 @@ public class RelocationSPH extends RelocationPH implements PacketCustom.IServerP
         if (!world.isRemote) {
             updateMap.remove(world);
             if (!chunkWatchers.isEmpty()) {
-                List<EntityPlayerMP> players = getServerPlayers();
+                final List<EntityPlayerMP> players = getServerPlayers();
                 for (EntityPlayerMP p : players) {
                     if (p.worldObj.provider.dimensionId == world.provider.dimensionId)
                         chunkWatchers.removeAll(p.getEntityId());
@@ -72,7 +73,7 @@ public class RelocationSPH extends RelocationPH implements PacketCustom.IServerP
     }
 
     public void onChunkWatch(EntityPlayer p, ChunkCoordIntPair c) {
-        newWatchers.computeIfAbsent(p.getEntityId(), (k) -> new LinkedList<>(Collections.singletonList(c)));
+        newWatchers.computeIfAbsent(p.getEntityId(), (k) -> new LinkedList<>()).add(c);
     }
 
     public void onChunkUnWatch(EntityPlayer p, ChunkCoordIntPair c) {
@@ -88,35 +89,37 @@ public class RelocationSPH extends RelocationPH implements PacketCustom.IServerP
     }
 
     private void sendData(List<EntityPlayerMP> players) {
+
         for (EntityPlayerMP p : players) {
             if (chunkWatchers.containsKey(p.getEntityId())) {
                 Map<Set<ChunkCoordIntPair>, MCByteStream> pairs = updateMap.get(p.worldObj);
                 if (pairs != null && !pairs.isEmpty()) {
-                    Collection<ChunkCoordIntPair> chunks = chunkWatchers.get(p.getEntityId());
-                    PacketCustom packet = new PacketCustom(channel, 2).compress();
-                    boolean send = false;
-                    Set<Map.Entry<Set<ChunkCoordIntPair>, MCByteStream>> toIter = pairs.entrySet().stream()
-                            .filter(pair -> pair.getKey().stream().anyMatch(chunks::contains))
-                            .collect(Collectors.toSet());
 
-                    for (Map.Entry<Set<ChunkCoordIntPair>, MCByteStream> pair : toIter) {
-                        MCByteStream stream = pair.getValue();
-                        send = true;
-                        packet.writeByteArray(stream.getBytes());
-                        packet.writeByte(255); // terminator
+                    final Set<ChunkCoordIntPair> chunks = chunkWatchers.get(p.getEntityId());
+                    final PacketCustom packet = new PacketCustom(channel, 2).compress();
+                    boolean send = false;
+
+                    for (Map.Entry<Set<ChunkCoordIntPair>, MCByteStream> pair : pairs.entrySet()) {
+                        Set<ChunkCoordIntPair> uchunks = pair.getKey();
+                        if (uchunks.stream().anyMatch(chunks::contains)) {
+                            MCByteStream stream = pair.getValue();
+                            send = true;
+                            packet.writeByteArray(stream.getBytes());
+                            packet.writeByte(255); // terminator
+                        }
                     }
 
                     if (send) packet.sendToPlayer(p);
                 }
             }
         }
-        updateMap.entrySet().forEach(worldMapEntry -> worldMapEntry.getValue().clear());
+        updateMap.forEach((key, value) -> value.clear());
     }
 
     private void sendDesc(List<EntityPlayerMP> players) {
         players.stream().filter(epMP -> newWatchers.containsKey(epMP.getEntityId())).forEach(ePMP -> {
-            LinkedList<ChunkCoordIntPair> watched = newWatchers.get(ePMP.getEntityId());
-            PacketCustom pkt = getDescPacket(ePMP.worldObj, new HashSet<>(watched));
+            final LinkedList<ChunkCoordIntPair> watched = newWatchers.get(ePMP.getEntityId());
+            final PacketCustom pkt = getDescPacket(ePMP.worldObj, new HashSet<>(watched));
             if (pkt != null) pkt.sendToPlayer(ePMP);
             for (ChunkCoordIntPair c : watched) {
                 chunkWatchers.put(ePMP.getEntityId(), c);
@@ -146,7 +149,7 @@ public class RelocationSPH extends RelocationPH implements PacketCustom.IServerP
             }
             return new HashMap<>();
         }).computeIfAbsent(chunks, cs -> {
-            MCByteStream s = new MCByteStream(new ByteArrayOutputStream());
+            final MCByteStream s = new MCByteStream(new ByteArrayOutputStream());
             s.writeByte(key);
             return s;
         });

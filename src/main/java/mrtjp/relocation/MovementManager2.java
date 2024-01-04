@@ -1,9 +1,6 @@
 package mrtjp.relocation;
 
-import static mrtjp.relocation.BlockStruct.BLOCK_STRUCT;
-
 import java.lang.ref.WeakReference;
-import java.util.AbstractMap;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -40,8 +37,8 @@ import scala.Tuple2;
 
 public class MovementManager2 {
 
-    public static Map<Integer, WorldStructs> serverRelocations = new HashMap<>();
-    public static Map<Integer, WorldStructs> clientRelocations = new HashMap<>();
+    public static final Map<Integer, WorldStructs> serverRelocations = new HashMap<>();
+    public static final Map<Integer, WorldStructs> clientRelocations = new HashMap<>();
 
     public static Map<Integer, WorldStructs> relocationMap(boolean isClient) {
         if (isClient) return clientRelocations;
@@ -106,7 +103,7 @@ public class MovementManager2 {
                 if (Bs.isPresent()) {
                     clientCycleMove(w, Bs.get());
                 } else {
-                    throw new RuntimeException("DC: Moving structure with id $id was not found client-side.");
+                    throw new RuntimeException("DC: Moving structure with id " + id + " was not found client-side.");
                 }
                 break;
             }
@@ -119,7 +116,7 @@ public class MovementManager2 {
     }
 
     public static void sendStruct(World w, BlockStruct struct) {
-        RelocationSPH.MCByteStream out = RelocationSPH.instance.getStream(w, struct.getChunks(), 1);
+        final RelocationSPH.MCByteStream out = RelocationSPH.instance.getStream(w, struct.getChunks(), 1);
         out.writeShort(struct.id);
         struct.writeDesc(out);
         RelocationSPH.instance.forceSendData();
@@ -175,10 +172,10 @@ public class MovementManager2 {
 
         for (BlockRow r : rows) TileMovingRow.setBlockForRow(w, r);
 
-        BlockStruct struct = new BlockStruct();
-        struct.id = BLOCK_STRUCT.claimID();
+        final BlockStruct struct = new BlockStruct();
+        struct.id = BlockStruct.claimID();
         struct.speed = speed;
-        struct.rows = rows;
+        struct.setRows(rows);
         struct.callback = new WeakReference<>(c);
         addStructToWorld(w, struct);
         sendStruct(w, struct);
@@ -187,17 +184,17 @@ public class MovementManager2 {
     }
 
     public static void onTick(boolean isClient) {
-        Map<Integer, WorldStructs> map = relocationMap(isClient);
+        final Map<Integer, WorldStructs> map = relocationMap(isClient);
         for (Map.Entry<Integer, WorldStructs> entry : map.entrySet()) {
             WorldStructs ws = entry.getValue();
 
             if (ws != null && ws.nonEmpty()) {
                 Integer dim = entry.getKey();
                 ws.pushAll();
-                World world = getWorld(dim, isClient);
+                final World world = getWorld(dim, isClient);
                 if (world != null) {
                     for (BlockStruct bs : ws.structs) {
-                        for (BlockRow br : bs.rows) {
+                        for (BlockRow br : bs.getRows()) {
                             br.pushEntities(world, bs.progress);
                         }
                     }
@@ -206,13 +203,13 @@ public class MovementManager2 {
         }
 
         if (!isClient) {
-            Map<Integer, Set<BlockStruct>> fin = map.entrySet().stream()
-                    .map(
-                            entry -> new AbstractMap.SimpleEntry<Integer, Set<BlockStruct>>(
-                                    entry.getKey(),
-                                    entry.getValue().removeFinished()) {})
-                    .filter(entry -> entry.getValue() != null)
-                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+
+            // Fair point to scala - this is a lot less ugly there. tbh there's definitely cleaner ways in java
+            // but that's a future me problem
+            final Map<Integer, Set<BlockStruct>> fin = map.entrySet().stream()
+                .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().removeFinished())).entrySet().stream()
+                .filter(entry -> entry.getValue() != null && !entry.getValue().isEmpty())
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
             for (Map.Entry<Integer, Set<BlockStruct>> entry : fin.entrySet()) {
                 Integer dim = entry.getKey();
@@ -233,12 +230,9 @@ public class MovementManager2 {
         getWorldStructs(w).clear();
     }
 
-    // TODO: Scala moment
     public static void clientCycleMove(World w, BlockStruct struct) {
         getWorldStructs(w).removeStruct(struct);
-        for (BlockRow bs : struct.rows) {
-            bs.pushEntities(w, 1.0);
-        }
+        struct.getRows().forEach(br -> br.pushEntities(w, 1.0));
         cycleMove(w, struct);
     }
 
@@ -252,7 +246,7 @@ public class MovementManager2 {
 
         // TODO: Scala moment
         Set<BlockCoord> changes = new HashSet<>();
-        for (BlockRow r : struct.rows) {
+        for (BlockRow r : struct.getRows()) {
             r.cacheChanges(w, changes);
         }
         for (BlockCoord bc : changes) w.notifyBlockOfNeighborChange(bc.x, bc.y, bc.z, Blocks.air);

@@ -53,7 +53,7 @@ public class TileMovingRow extends InstancedBlockTile {
     public Cuboid6 getBlockBounds() {
         BlockStruct s = MovementManager2.getEnclosedStructure(world(), xCoord, yCoord, zCoord);
         if (s != null) {
-            BlockRow r = s.rows.stream().filter(u -> u.contains(xCoord, yCoord, zCoord)).findFirst().get();
+            BlockRow r = s.getRows().stream().filter(u -> u.contains(xCoord, yCoord, zCoord)).findFirst().get();
             return TileMovingRow.getBoxFor(world(), r, s.progress);
         } else return Cuboid6.full;
     }

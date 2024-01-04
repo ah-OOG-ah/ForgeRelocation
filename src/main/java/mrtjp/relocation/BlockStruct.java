@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.World;
@@ -19,37 +20,46 @@ import mrtjp.relocation.api.IMovementCallback;
 
 public class BlockStruct {
 
-    public static final BlockStruct BLOCK_STRUCT = new BlockStruct();
+    private static int maxID = 0;
 
-    private int maxID = 0;
-
-    public int claimID() {
+    public static int claimID() {
 
         // little less than Short.MaxValue (reserved for terminator)
         maxID = (maxID < 32765) ? maxID + 1 : 0;
         return maxID;
     }
 
-    int id = -1;
-    double speed = 1 / 16D;
-    // Note: this needs to preserve ordering! hence the LinkedHashSet
-    LinkedHashSet<BlockRow> rows = new LinkedHashSet<>();
-    WeakReference<IMovementCallback> callback = new WeakReference<>(null);
+    public int id = -1;
+    public double speed = 1 / 16D;
+    private Set<BlockRow> rows = new HashSet<>();
+    public WeakReference<IMovementCallback> callback = new WeakReference<>(null);
 
-    double progress = 0;
+    public double progress = 0;
 
-    Set<BlockCoord> allBlocks = new HashSet<>(rows.stream().map(br -> br.allBlocks).reduce((l, r) -> {
-        l.addAll(r);
-        return l;
-    }).orElseGet(ArrayList::new));
-    Set<BlockCoord> preMoveBlocks = new HashSet<>(rows.stream().map(br -> br.preMoveBlocks).reduce((l, r) -> {
-        l.addAll(r);
-        return l;
-    }).orElseGet(ArrayList::new));
-    Set<BlockCoord> postMoveBlocks = new HashSet<>(rows.stream().map(br -> br.postMoveBlocks).reduce((l, r) -> {
-        l.addAll(r);
-        return l;
-    }).orElseGet(ArrayList::new));
+    // Originally, these were lazy. In the interest of not writing spaghetti (and also because I can't figure out how),
+    // I'm just going to make them eager
+    public final Set<BlockCoord> allBlocks = new HashSet<>();
+    public final Set<BlockCoord> preMoveBlocks = new HashSet<>();
+    public final Set<BlockCoord> postMoveBlocks = new HashSet<>();
+
+    public Set<BlockRow> getRows() {
+        return this.rows;
+    }
+    public void setRows(Set<BlockRow> rows) {
+        this.rows = rows;
+        initBlockSets();
+    }
+
+    private void initBlockSets() {
+
+        this.allBlocks.clear();
+        this.preMoveBlocks.clear();
+        this.postMoveBlocks.clear();
+
+        this.allBlocks.addAll(rows.stream().flatMap(br -> br.allBlocks.stream()).collect(Collectors.toSet()));
+        this.preMoveBlocks.addAll(rows.stream().flatMap(br -> br.preMoveBlocks.stream()).collect(Collectors.toSet()));
+        this.postMoveBlocks.addAll(rows.stream().flatMap(br -> br.postMoveBlocks.stream()).collect(Collectors.toSet()));
+    }
 
     public int moveDir() {
         return rows.iterator().next().moveDir;
@@ -128,11 +138,11 @@ public class BlockStruct {
 
         progress = in.readFloat();
         speed = in.readFloat();
-        LinkedHashSet<BlockRow> rb = new LinkedHashSet<>();
+        rows.clear();
         for (int i = 0; i <= in.readUByte(); ++i) {
-            rb.add(new BlockRow(WorldLib.unpackCoords(in.readLong()), in.readUByte(), in.readUShort()));
+            rows.add(new BlockRow(WorldLib.unpackCoords(in.readLong()), in.readUByte(), in.readUShort()));
         }
-        rows = rb;
+        initBlockSets();
     }
 
 }
