@@ -3,9 +3,7 @@ package mrtjp.relocation;
 import static java.lang.Math.min;
 
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -45,6 +43,7 @@ public class BlockStruct {
     public Set<BlockRow> getRows() {
         return this.rows;
     }
+
     public void setRows(Set<BlockRow> rows) {
         this.rows = rows;
         initBlockSets();

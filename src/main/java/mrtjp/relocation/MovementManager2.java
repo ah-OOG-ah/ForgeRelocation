@@ -207,9 +207,9 @@ public class MovementManager2 {
             // Fair point to scala - this is a lot less ugly there. tbh there's definitely cleaner ways in java
             // but that's a future me problem
             final Map<Integer, Set<BlockStruct>> fin = map.entrySet().stream()
-                .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().removeFinished())).entrySet().stream()
-                .filter(entry -> entry.getValue() != null && !entry.getValue().isEmpty())
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+                    .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().removeFinished())).entrySet()
+                    .stream().filter(entry -> entry.getValue() != null && !entry.getValue().isEmpty())
+                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
             for (Map.Entry<Integer, Set<BlockStruct>> entry : fin.entrySet()) {
                 Integer dim = entry.getKey();

@@ -2,17 +2,13 @@ package mrtjp.relocation.handler;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
-import com.google.common.collect.SetMultimap;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.play.INetHandlerPlayServer;
@@ -20,8 +16,8 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.World;
 
-import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapBuilder;
+import com.google.common.collect.SetMultimap;
 
 import codechicken.lib.data.MCDataOutputWrapper;
 import codechicken.lib.packet.PacketCustom;
@@ -50,7 +46,8 @@ public class RelocationSPH extends RelocationPH implements PacketCustom.IServerP
             INetHandlerPlayServer iNetHandlerPlayServer) {}
 
     private final Map<World, Map<Set<ChunkCoordIntPair>, MCByteStream>> updateMap = new HashMap<>();
-    private final SetMultimap<Integer, ChunkCoordIntPair> chunkWatchers = MultimapBuilder.hashKeys().hashSetValues().build();
+    private final SetMultimap<Integer, ChunkCoordIntPair> chunkWatchers = MultimapBuilder.hashKeys().hashSetValues()
+            .build();
     private final Map<Integer, LinkedList<ChunkCoordIntPair>> newWatchers = new HashMap<>();
 
     public void onTickEnd() {

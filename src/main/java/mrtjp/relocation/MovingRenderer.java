@@ -30,8 +30,6 @@ public class MovingRenderer {
     private float frame = 0;
     private RenderBlocks renderBlocks = null;
 
-    private Tessellator tes = Tessellator.instance;
-
     private void render(int x, int y, int z, Vector3 rpos) {
 
         Minecraft mc = Minecraft.getMinecraft();
@@ -58,13 +56,13 @@ public class MovingRenderer {
         glDisable(GL_CULL_FACE);
         glShadeModel((Minecraft.isAmbientOcclusionEnabled()) ? GL_SMOOTH : GL_FLAT);
 
-        for (int pass : Arrays.asList(1, 2)) {
-            tes.startDrawingQuads();
-            tes.setTranslation(
+        for (int pass : Arrays.asList(0, 1)) {
+            Tessellator.instance.startDrawingQuads();
+            Tessellator.instance.setTranslation(
                     -TileEntityRendererDispatcher.staticPlayerX + MathLib.clamp(-1f, 1f, (float) rpos.x),
                     -TileEntityRendererDispatcher.staticPlayerY + MathLib.clamp(-1f, 1f, (float) rpos.y),
                     -TileEntityRendererDispatcher.staticPlayerZ + MathLib.clamp(-1f, 1f, (float) rpos.z));
-            tes.setColorOpaque(1, 1, 1);
+            Tessellator.instance.setColorOpaque(1, 1, 1);
 
             if (block.canRenderInPass(pass)) {
                 renderHack = false;
@@ -72,8 +70,8 @@ public class MovingRenderer {
                 renderHack = true;
             }
 
-            tes.setTranslation(0, 0, 0);
-            tes.draw();
+            Tessellator.instance.setTranslation(0, 0, 0);
+            Tessellator.instance.draw();
         }
         RenderHelper.enableStandardItemLighting();
         mc.entityRenderer.disableLightmap(frame);
