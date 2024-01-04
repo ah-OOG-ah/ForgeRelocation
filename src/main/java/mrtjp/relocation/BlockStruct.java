@@ -139,7 +139,8 @@ public class BlockStruct {
         progress = in.readFloat();
         speed = in.readFloat();
         rows.clear();
-        for (int i = 0; i <= in.readUByte(); ++i) {
+        final int end = in.readUByte();
+        for (int i = 0; i < end; ++i) {
             rows.add(new BlockRow(WorldLib.unpackCoords(in.readLong()), in.readUByte(), in.readUShort()));
         }
         initBlockSets();
