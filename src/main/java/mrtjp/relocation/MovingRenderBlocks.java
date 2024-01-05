@@ -1,13 +1,12 @@
 package mrtjp.relocation;
 
-import javax.annotation.Nonnull;
-
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.world.IBlockAccess;
 
 public class MovingRenderBlocks extends RenderBlocks {
+
     public double eps = 1D / 0x10000;
 
     public MovingRenderBlocks(IBlockAccess w) {

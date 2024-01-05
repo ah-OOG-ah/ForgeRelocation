@@ -28,12 +28,10 @@ import codechicken.lib.data.MCDataOutput;
 import codechicken.lib.vec.BlockCoord;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import mrtjp.core.math.JMathLib;
 import mrtjp.core.math.MathLib;
 import mrtjp.relocation.api.IMovementCallback;
 import mrtjp.relocation.handler.RelocationConfig;
 import mrtjp.relocation.handler.RelocationSPH;
-import scala.Tuple2;
 
 public class MovementManager2 {
 
@@ -146,7 +144,7 @@ public class MovementManager2 {
 
         Multimap<Pair<Integer, Integer>, Integer> map = MultimapBuilder.hashKeys().arrayListValues().build();
         for (BlockCoord b : blocks) {
-            map.put(JMathLib.normal(b, moveDir), MathLib.basis(b, moveDir));
+            map.put(MathLib.normal(b, moveDir), MathLib.basis(b, moveDir));
         }
 
         int shift = ((moveDir & 1) == 1) ? 1 : -1;
@@ -155,13 +153,12 @@ public class MovementManager2 {
             Integer[] line = map.get(normal).toArray(new Integer[0]);
             Integer[] sline = (shift == 1) ? Arrays.stream(line).sorted().toArray(Integer[]::new)
                     : Arrays.stream(line).sorted(Collections.reverseOrder()).toArray(Integer[]::new);
-            for (Pair<Integer, Integer> e : JMathLib.splitLine(Arrays.asList(sline), shift)) {
+            for (Pair<Integer, Integer> e : MathLib.splitLine(Arrays.asList(sline), shift)) {
 
                 int basis = e.getLeft();
                 int size = e.getRight();
 
-                BlockCoord coord = MathLib
-                        .rhrAxis(moveDir, new Tuple2<>(normal.getKey(), normal.getValue()), basis + shift);
+                BlockCoord coord = MathLib.rhrAxis(moveDir, normal, basis + shift);
                 rows.add(new BlockRow(coord, moveDir, size));
             }
         }
